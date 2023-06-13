@@ -1,24 +1,28 @@
 
 import React, { useEffect } from "react";
 import './landingPage.css';
-import { NavBar } from "../../components";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
+  const navigate = useNavigate()
 
   useEffect(() => {
     AOS.init();
   }, [])
 
   return (
-    <>
-      <NavBar />
+      <Box>
       <section className='landing-section'>
         <div className="middle-section">
-          <div className="landing-text" data-aos="flip-right" data-aos-duration="1200" data-aos-delay="400">
-            <h1>Introducing GetHired app <br />
-              Landing page</h1>
+          <div className="landing-text" >
+          <h1 data-aos="flip-right" data-aos-duration="1200" data-aos-delay="400">Introducing GetHired  <br />
+              application for hiring students</h1>
+              <button onClick={()=>{navigate('/login')}} className="button" data-aos="fade-left" data-aos-duration="1300">Log in</button>
+              <h4 className="or-text" data-aos="fade-left" data-aos-duration="1300">or</h4>
+              <button onClick={()=>{navigate('/register')}} className="button" data-aos="fade-left" data-aos-duration="1300">Register now</button>
           </div>
           <div className="img" data-aos="flip-right" data-aos-duration="1200" data-aos-delay="400">
             <img className='landing-image' src={require("../../images/pic2.png")} alt="pic" width="600" height="400" />
@@ -27,11 +31,9 @@ function LandingPage() {
       </section>
 
       <svg className="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path className='test' fill="#fff" fillOpacity="1" d="M0,96L60,90.7C120,85,240,75,360,90.7C480,107,600,149,720,165.3C840,181,960,171,1080,138.7C1200,107,1320,53,1380,26.7L1440,0L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
-
-      <section>
-        <div className="about-section">
+         <section className="about-section">
           <div className="img" data-aos="fade-left" data-aos-duration="1200">
-            <img className='about-image' src={require('../../images/pic.jpg')} alt="pic" width="680" height="680" />
+            <img className='about-image' src={require('../../images/pic.jpg')} alt="pic" width="670" height="670" />
           </div>
           <div className='about-text' data-aos="fade-right" data-aos-duration="1200">
             <span className="circle" data-aos="fade-right" data-aos-duration="1200">1000+ jobs</span>
@@ -42,8 +44,7 @@ function LandingPage() {
               in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
               deserunt mollit anim id est laborum.</p>
           </div>
-        </div>
-      </section>
+        </section> 
 
       <section className="hiring">
         <div className="container">
@@ -114,12 +115,10 @@ function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> 
 
-      <svg className="wave-end" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path className='test' fill="#f7e947" fillOpacity="1" d="M0,96L60,90.7C120,85,240,75,360,90.7C480,107,600,149,720,165.3C840,181,960,171,1080,138.7C1200,107,1320,53,1380,26.7L1440,0L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
-
-    </>
-
+       <svg className="wave-end" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path className='test' fill="#0d1a30" fillOpacity="1" d="M0,96L60,90.7C120,85,240,75,360,90.7C480,107,600,149,720,165.3C840,181,960,171,1080,138.7C1200,107,1320,53,1380,26.7L1440,0L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg> 
+      </Box>
   );
 }
 

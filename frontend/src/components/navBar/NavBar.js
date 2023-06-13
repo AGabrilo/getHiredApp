@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import { Typography, AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Container, Avatar, Button, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Jobs', 'Companies', 'Salaries'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 function NavBar() {
 
@@ -26,7 +26,7 @@ function NavBar() {
     };
 
     return (
-        <AppBar position="sticky" sx={{ backgroundColor: '#303fac', boxShadow: 'none' }}>
+        <AppBar position="sticky" sx={{ backgroundColor: '#0d1a30', boxShadow: 'none' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -41,7 +41,7 @@ function NavBar() {
                             fontFamily: 'monospace',
                             fontWeight: 900,
                             letterSpacing: '.3rem',
-                            color: '#f7e947',
+                            color: '#fafafa',
                             textDecoration: 'none',
                         }}
                     >
@@ -51,9 +51,6 @@ function NavBar() {
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
@@ -77,11 +74,18 @@ function NavBar() {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
-                                </MenuItem>
-                            ))}
+                            <MenuItem key='jobs' onClick={handleCloseNavMenu}>
+                                <Link to='/jobs'><Typography textAlign="center">Jobs</Typography></Link>
+                            </MenuItem>
+                            <MenuItem key='companies' onClick={handleCloseNavMenu}>
+                                <Link to='/companies'> <Typography textAlign="center">Companies</Typography> </Link>
+                            </MenuItem>
+                            <MenuItem key='myapplications' onClick={handleCloseNavMenu}>
+                                <Link to='/myapplications'><Typography textAlign="center">My applications</Typography></Link>
+                            </MenuItem>
+                            <MenuItem key='favourites' onClick={handleCloseNavMenu}>
+                                <Link to='/favourites'><Typography textAlign="center">Favourites</Typography></Link>
+                            </MenuItem>
                         </Menu>
                     </Box>
                     <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -89,7 +93,7 @@ function NavBar() {
                         variant="h5"
                         noWrap
                         component="a"
-                        href=""
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
@@ -97,22 +101,47 @@ function NavBar() {
                             fontFamily: 'monospace',
                             fontWeight: 900,
                             letterSpacing: '.3rem',
-                            color: '#f7e947',
+                            color: '#fafafa',
                             textDecoration: 'none',
                         }}
                     >
                         GetHired
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
+                        <Link to='/jobs'>
                             <Button
-                                key={page}
+                                key='jobs2'
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: '#f7e947', display: 'block', fontSize: '22px' }}
+                                sx={{ my: 2, color: '#fafafa', display: 'block', fontSize: '22px' }}
                             >
-                                {page}
+                                Jobs
                             </Button>
-                        ))}
+                        </Link>
+
+                        <Link to='/companies'><Button
+                            key='companies2'
+                            onClick={handleCloseNavMenu}
+                            sx={{ my: 2, color: '#fafafa', display: 'block', fontSize: '22px' }}
+                        >
+                            Companies
+                        </Button></Link>
+
+                        <Link to='/myapplications'><Button
+                            key='myapplications2'
+                            onClick={handleCloseNavMenu}
+                            sx={{ my: 2, color: '#fafafa', display: 'block', fontSize: '22px' }}
+                        >
+                            My Applications
+                        </Button></Link>
+
+                        <Link to='/favourites'><Button
+                            key='favourites2'
+                            onClick={handleCloseNavMenu}
+                            sx={{ my: 2, color: '#fafafa', display: 'block', fontSize: '22px' }}
+                        >
+                            Favourites
+                        </Button></Link>
+
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>

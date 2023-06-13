@@ -1,5 +1,9 @@
-import NavBar from './navBar/NavBar'
+import NavBar from './navBar/NavBar';
+import LoginForm from './loginForm/LoginForm';
+import RegisterForm from './registerForm/RegisterForm';
 
 export {
-    NavBar
+    LoginForm,
+    NavBar,
+    RegisterForm
 }
