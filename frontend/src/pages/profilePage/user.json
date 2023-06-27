@@ -1,0 +1,52 @@
+{
+    "username": "ChowChow",
+    "location": {
+        "country": "Croatia",
+        "city": "Split"
+    },
+    "gitHubProfile": "github/Choww",
+    "email": "chow@gmail.com",
+    "resume": "resumeFile.txt",
+    "summary": "Something about me, i'm developer, i like to code. I like web development and work work work..bla bla bla. My summary.",
+    "skills": [
+        "JavaScript",
+        "MongoDB",
+        "C#",
+        "Android"
+    ],
+    "workExperience": [
+        {
+            "companyName": "Ericsson",
+            "jobTitle": "Frontend Developer",
+            "location": {
+                "country": "Croatia",
+                "city": "Split"
+            },
+            "startDate": "1.1.2022",
+            "endDate": "2.1.2023",
+            "description": "Working on a frontend part of a project"
+        },
+        {
+            "companyName": "Infobip",
+            "jobTitle": "Backend Developer",
+            "location": {
+                "country": "Croatia",
+                "city": "Split"
+            },
+            "startDate": "13.4.2022",
+            "endDate": "4.5.2023",
+            "description": "Backend developer on few projects very gud"
+        }
+    ],
+    "education": [
+        {
+            "degreeType": "Master",
+            "degreeName": "Computer science",
+            "schoolName": "OSS",
+            "startDate": "1.10.2020",
+            "endDate": "20.9.2022"
+        }
+    ],
+    "openToWork": true,
+    "picture": "pic.jpg"
+}

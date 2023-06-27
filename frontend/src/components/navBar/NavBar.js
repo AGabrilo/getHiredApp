@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { Typography, AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Container, Avatar, Button, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
+import { useNavigate } from "react-router-dom";
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 function NavBar() {
+    const navigate = useNavigate()
 
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
@@ -166,11 +167,12 @@ function NavBar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))}
+                            <MenuItem key='profile' onClick={() => { navigate('myprofile'); handleCloseUserMenu() }}>
+                                <Typography textAlign="center">My profile</Typography>
+                            </MenuItem>
+                            <MenuItem key='logout' onClick={handleCloseUserMenu}>
+                                <Typography textAlign="center">Logout</Typography>
+                            </MenuItem>
                         </Menu>
                     </Box>
                 </Toolbar>

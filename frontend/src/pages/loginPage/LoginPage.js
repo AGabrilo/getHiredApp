@@ -4,8 +4,6 @@ import { LoginForm, RegisterForm } from '../../components';
 
 function LoginPage() {
 
-
-
     return (
         <>
             <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', flexWrap: 'wrap', backgroundColor: '#0d1a30', alignItems: 'center', px: 5 }}>

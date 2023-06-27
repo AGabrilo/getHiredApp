@@ -2,7 +2,6 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    color: black;
   }
   
   .landing-section {
@@ -67,7 +66,7 @@
   }
 
   .button {
-    background-color: #9997ef; 
+    background-color: #f2572c; 
     color: #0d1a30;
     border: none;
     width: 50%;

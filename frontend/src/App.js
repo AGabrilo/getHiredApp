@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LandingPage, CompaniesPage, FavouritesPage, JobsPage, MyApplicationsPage, LoginPage } from "./pages";
+import { LandingPage, CompaniesPage, FavouritesPage, JobsPage, MyApplicationsPage, LoginPage, ProfilePage } from "./pages";
 import { NavBar } from "./components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -17,6 +17,7 @@ function App() {
             <Route  exact path="/jobs" element={<JobsPage />} />
             <Route exact path="myapplications" element={<MyApplicationsPage />} />
             <Route  exact path="/login" element={<LoginPage />} />
+            <Route  exact path="/myprofile" element={<ProfilePage />} />
         </Routes>
       </BrowserRouter> 
     </div>

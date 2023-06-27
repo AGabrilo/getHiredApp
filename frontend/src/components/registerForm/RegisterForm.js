@@ -67,10 +67,10 @@ function RegisterForm() {
                 </Box>
             </CardContent>
             <CardActions>
-                <Button onClick={formik.handleReset} variant='contained' sx={{ mr: 2, backgroundColor: '#3b44d4', color: '#fafafa' }}>
+                <Button onClick={formik.handleReset} variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa' }}>
                     Cancel
                 </Button>
-                <Button disabled={Object.keys(formik.errors).length ? true : false} type='submit' variant='contained' sx={{ backgroundColor: '#3b44d4', color: '#fafafa' }}> Log in</Button>
+                <Button disabled={Object.keys(formik.errors).length ? true : false} type='submit' variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa' }}> Log in</Button>
             </CardActions>
         </Card>
     )
