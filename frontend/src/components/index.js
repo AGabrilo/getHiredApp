@@ -1,3 +1,4 @@
+import ApplicationTable from './applicationTable/ApplicationTable';
 import CompanyCard from './companyCard/CompanyCard';
 import CompanySearch from './companySearch/CompanySearch';
 import EducationItem from './educationItem/EducationItem';
@@ -10,6 +11,7 @@ import NavBar from './navBar/NavBar';
 import RegisterForm from './registerForm/RegisterForm';
 
 export {
+    ApplicationTable,
     CompanyCard,
     CompanySearch,
     EducationItem,
