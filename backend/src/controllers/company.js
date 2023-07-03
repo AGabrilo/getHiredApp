@@ -12,6 +12,7 @@ module.exports.getAllCompanies = async (req, res, next) => {
 
 module.exports.getCompany = async (req, res, next) => {
     const {companyId} = req.params;
+    console.log('Get company controller: ', companyId)
     try{
         const result = await CompanyService.getCompany(companyId);
         res.status(200).json(result);

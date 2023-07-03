@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Grid, Stack } from '@mui/material';
 import { JobFilters, JobCard, JobSearch } from '../../components';
 
@@ -7,6 +7,28 @@ const jobTypeFilter = ["full-time", "part-time", "internship"]
 const datePostedFilter = ["any", "last 24 hours", "last 3 days", "last week", "last month"]
 
 function JobsPage() {
+    const [jobs, setJobs] = useState([]);
+    const [name, setName] = useState();
+    const [location, setLocation] = useState();
+    const [filteredData, setFilteredData] = useState([])
+
+    const getData = () => {
+        fetch('http://localhost:3001/api/job', {
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setJobs(data)
+                setFilteredData(data)
+            });
+    }
+
+    useEffect(() => {
+        getData()
+    }, [])
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
@@ -14,54 +36,13 @@ function JobsPage() {
                 <JobSearch />
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'no-wrap' }}>
                     <Grid container spacing={2} item xs={12} md={9} lg={9} >
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
+                        {filteredData.map((job, i)=>{
+                            return <Grid item md={4} lg={4} key={i}>
+                            <JobCard job={job}/>
                         </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
-                        <Grid item md={4} lg={4}>
-                            <JobCard />
-                        </Grid>
+                        })}
+                        
+                        
                     </Grid>
 
                     <Grid container item xs={12} md={2} lg={2} sx={{ height: 'fit-content', flexGrow: 1, display: { xs: 'none', md: 'block' } }}>

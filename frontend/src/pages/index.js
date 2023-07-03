@@ -5,6 +5,8 @@ import JobsPage from './jobsPage/JobsPage';
 import MyApplicationsPage from './myApplicationsPage/MyApplicationsPage';
 import LoginPage from './loginPage/LoginPage';
 import ProfilePage from './profilePage/ProfilePage';
+import CompanyDetailsPage from './companyDetailsPage/CompanyDetailsPage';
+import JobDetailsPage from './jobDetailsPage/JobDetailsPage';
 
 export {
     CompaniesPage,
@@ -13,5 +15,7 @@ export {
     LandingPage,
     LoginPage,
     MyApplicationsPage,
-    ProfilePage
+    ProfilePage,
+    CompanyDetailsPage,
+    JobDetailsPage
 }

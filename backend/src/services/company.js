@@ -1,10 +1,12 @@
 const { CompanyModel } = require("../models")
 
 module.exports.getAllCompanies = async () => {
+    console.log('Get all companies')
     return await CompanyModel.find();
 }
 
 module.exports.getCompany = async (companyId) => {
+    console.log('Get company: ', companyId)
     const filter = {
         _id: companyId
     }

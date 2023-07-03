@@ -2,15 +2,11 @@ import React from 'react';
 import { Box, Avatar, Typography, CardContent, Button, Card, CardActions, IconButton, Grid, Chip } from '@mui/material';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import { palette } from '../../utils/palette'
-import { useNavigate } from 'react-router-dom';
 
+const skills =['JavaScript', "Python", 'MongoDB']
 
-function JobCard(props) {
-    const {job}= props;
-    const shortedSkills = job.skills.length >3? job.skills.slice(0, 3) : job.skills
-    const shortedDescription = job.description.length >200 ? job.description.slice(0,200) + '...':job.description;
-    const navigate = useNavigate();
-    
+function PostedJob(props) {
+
     return (
         <Card
             variant="outlined"
@@ -32,32 +28,30 @@ function JobCard(props) {
             >
                 <Avatar src="../../../public/logo192.png" sx={{ width: 56, height: 56 }} />
                 <Typography variant="h6">
-                    {job.datePosted}
+                    30.6.2023
                 </Typography>
             </Box>
             <CardContent>
                 <Typography variant="h5">
-                    {job.jobTitle}
-                </Typography>
-                <Typography variant="body1">
-                    {job.companyId}
+                    NYC Coders
                 </Typography>
                 <Grid container spacing={2}>
-                    { shortedSkills.map((skill, i) => {
+                    {skills.slice(0, 3).map((skill, i) => {
                         return <Grid item key={i} >
                             <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: palette[i] }} />
                         </Grid>
-                    })  }
+                    })}
                 </Grid>
                 <Typography level="body2">
-                    {shortedDescription}
+                    We are a community of developers prepping for coding interviews,
+                    participate, chat with others and get better at interviewing.
                 </Typography>
             </CardContent>
             <CardActions buttonFlex="0 1 120px">
                 <IconButton variant="outlined" color="neutral" sx={{ mr: 'auto' }}>
                     <FavoriteBorder />
                 </IconButton>
-                <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { navigate(`/jobs/${job._id}`) }}>
+                <Button variant='contained' sx={{ backgroundColor: '#f2572c' }}>
                     View
                 </Button>
                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }}>
@@ -65,8 +59,7 @@ function JobCard(props) {
                 </Button>
             </CardActions>
         </Card>
-
     )
 }
 
-export default JobCard;
+export default PostedJob;
