@@ -6,11 +6,12 @@ import { useNavigate } from 'react-router-dom';
 
 
 function JobCard(props) {
-    const {job}= props;
-    const shortedSkills = job.skills.length >3? job.skills.slice(0, 3) : job.skills
-    const shortedDescription = job.description.length >200 ? job.description.slice(0,200) + '...':job.description;
+    const { job } = props;
+    const shortedSkills = job.skills.length > 3 ? job.skills.slice(0, 3) : job.skills
+    const shortedDescription = job.description.length > 200 ? job.description.slice(0, 200) + '...' : job.description;
     const navigate = useNavigate();
-    
+    const isCompany = false;
+
     return (
         <Card
             variant="outlined"
@@ -43,11 +44,11 @@ function JobCard(props) {
                     {job.companyId}
                 </Typography>
                 <Grid container spacing={2}>
-                    { shortedSkills.map((skill, i) => {
+                    {shortedSkills.map((skill, i) => {
                         return <Grid item key={i} >
                             <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: palette[i] }} />
                         </Grid>
-                    })  }
+                    })}
                 </Grid>
                 <Typography level="body2">
                     {shortedDescription}
@@ -60,9 +61,11 @@ function JobCard(props) {
                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { navigate(`/jobs/${job._id}`) }}>
                     View
                 </Button>
-                <Button variant='contained' sx={{ backgroundColor: '#f2572c' }}>
-                    Apply
-                </Button>
+                {isCompany ? null :
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }}>
+                        Apply
+                    </Button>}
+
             </CardActions>
         </Card>
 

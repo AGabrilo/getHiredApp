@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import { Box, Button, TextField, Card, Typography, Stack, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@mui/material';
 
-function UpdateDialogForm(props) {
+function CompanyDialogForm(props) {
 const {  company, open, setOpen, handleUpdate} = props;
 const initialValues = { name: company.name, description: company.description, employersNum: company.employersNum, location: {city:company.location.city, country: company.location.country} }
 const formik = useFormik({
@@ -110,4 +110,4 @@ const formik = useFormik({
     )
 }
 
-export default UpdateDialogForm;
+export default CompanyDialogForm;

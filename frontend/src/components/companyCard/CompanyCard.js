@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Box, Button, CardContent, Card, Typography, Stack, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteDialog from '../deleteDialog/DeleteDialog';
-import UpdateDialogForm from '../updateDialogForm/UpdateDialogForm';
+import CompanyDialogForm from '../companyDialogForm/CompanyDialogForm';
 
 function CompanyCard(props) {
     const { company, top, handleDeleteButton, handleUpdate } = props
@@ -57,7 +57,7 @@ function CompanyCard(props) {
                     : null}
             </CardContent>
           <DeleteDialog open={open} setOpen={setOpen} id={company._id} handleDeleteButton={handleDeleteButton} component='company'/>
-          <UpdateDialogForm open={openUpdate} setOpen={setOpenUpdate} company={company} handleUpdate={handleUpdate}/>
+          <CompanyDialogForm open={openUpdate} setOpen={setOpenUpdate} company={company} handleUpdate={handleUpdate}/>
         </Card>
     )
 }

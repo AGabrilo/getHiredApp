@@ -1,16 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import { Box, Grid, Stack } from '@mui/material';
-import { JobFilters, JobCard, JobSearch } from '../../components';
-
-const locationFilter = ["on-site", "remote"]
-const jobTypeFilter = ["full-time", "part-time", "internship"]
-const datePostedFilter = ["any", "last 24 hours", "last 3 days", "last week", "last month"]
+import { JobFilters, JobCard, SearchComponent } from '../../components';
+import { useSelector } from 'react-redux';
+import { selectJobTypesConf, selectSkillsConf, selectWorkLocationsConf } from '../../redux/configurationSlice';
 
 function JobsPage() {
     const [jobs, setJobs] = useState([]);
     const [name, setName] = useState();
     const [location, setLocation] = useState();
     const [filteredData, setFilteredData] = useState([])
+    const [filteredSkills, setFilteredSkills] = useState([]);
+    const [filteredWorkLocation, setFilteredWorkLocation] = useState([]);
+    const [filteredJobType, setFilteredJobType] = useState([]);
+    const jobTypes = useSelector(selectJobTypesConf)
+    const skills = useSelector(selectSkillsConf)
+    const workLocations = useSelector(selectWorkLocationsConf)
+
+    console.log('JOBBB TYPE', filteredJobType)
 
     const getData = () => {
         fetch('http://localhost:3001/api/job', {
@@ -26,14 +32,40 @@ function JobsPage() {
             });
     }
 
+    const getSearchedData = () => {
+        if (!name && !location) {
+            setFilteredData(jobs);
+        } else if (name && !location) {
+            setFilteredData(jobs.filter((d) => d.jobTitle.toLowerCase().includes(name)));
+        }
+        else if (!name && location) {
+            setFilteredData(jobs.filter((d) => d.location.city.toLowerCase().includes(location) || d.location.country.toLowerCase().includes(location)));
+        }
+        else {
+            setFilteredData(jobs.filter((d) => (d.location.city.toLowerCase().includes(location) || d.location.country.toLowerCase().includes(location)) && d.jobTitle.toLowerCase().includes(name)));
+        }
+    }
+
+    const getFilteredData = () =>{
+
+    }
+
     useEffect(() => {
         getData()
     }, [])
 
+    useEffect(() => {
+        getSearchedData()
+    }, [name, location])
+
+    useEffect(() => {
+        getFilteredData()
+    }, [filteredJobType, filteredSkills, filteredWorkLocation])
+
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
-                <JobSearch />
+                <SearchComponent setLocation={setLocation} setName={setName} component='Job' />
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'no-wrap' }}>
                     <Grid container spacing={2} item xs={12} md={9} lg={9} >
                         {filteredData.map((job, i)=>{
@@ -46,11 +78,12 @@ function JobsPage() {
                     </Grid>
 
                     <Grid container item xs={12} md={2} lg={2} sx={{ height: 'fit-content', flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
-                        <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
-                            <JobFilters title={'Location'} data={locationFilter} />
-                            <JobFilters title={'Job type'} data={jobTypeFilter} />
-                            <JobFilters title={'Date posted'} data={datePostedFilter} />
-                        </Stack>
+                        {jobTypes && skills && workLocations ?<Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
+                            <JobFilters title={'Job type'} data={jobTypes.map((el)=>el.key)} setFilter={setFilteredJobType} filter={filteredJobType} />
+                            <JobFilters title={'Skills'} data={skills.map((el)=>el.key)} setFilter={setFilteredSkills}/>
+                            <JobFilters title={'Work location'} data={workLocations.map((el)=>el.key)} setFilter={setFilteredWorkLocation}/>
+                        </Stack> : null}
+                        
                     </Grid>
                 </Box>
             </Box>

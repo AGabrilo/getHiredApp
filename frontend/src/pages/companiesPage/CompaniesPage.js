@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
-import { CompanyCard, CompanySearch } from '../../components';
+import { CompanyCard, SearchComponent } from '../../components';
 
 function CompaniesPage() {
     const [companies, setCompanies] = useState([]);
@@ -89,7 +89,7 @@ function CompaniesPage() {
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
-                <CompanySearch setName={setName} setLocation={setLocation} />
+            <SearchComponent setLocation={setLocation} setName={setName} component='Company' />
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'no-wrap' }}>
                     <Grid container spacing={2} item xs={12} md={12} lg={12} >

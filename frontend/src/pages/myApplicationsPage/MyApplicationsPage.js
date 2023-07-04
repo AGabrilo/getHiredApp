@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Chip, Typography } from '@mui/material';
-import { JobFilters, JobCard, JobSearch, ApplicationTable } from '../../components';
+import {  ApplicationTable } from '../../components';
 
 function MyApplicationsPage() {
 

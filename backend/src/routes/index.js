@@ -14,10 +14,14 @@ function init (){
     const applicationRouter = require('./application');
     applicationRouter.init();
 
+    const configurationRouter = require('./configuration');
+    configurationRouter.init();
+
     rootRouter.use("/user", userRouter.router)
     rootRouter.use("/company", companyRouter.router)
     rootRouter.use("/job", jobRouter.router)
     rootRouter.use("/application", applicationRouter.router)
+    rootRouter.use("/configuration", configurationRouter.router)
 }
 
 module.exports ={

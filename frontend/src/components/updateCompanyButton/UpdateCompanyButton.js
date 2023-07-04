@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Box, Button, TextField, Card, Typography, Stack, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@mui/material';
-import UpdateDialogForm from '../updateDialogForm/UpdateDialogForm';
+import CompanyDialogForm from '../companyDialogForm/CompanyDialogForm';
 
 function UpdateCompanyButton(props) {
     const { company, getData } = props;
@@ -32,7 +32,7 @@ function UpdateCompanyButton(props) {
             <Button variant="contained" sx={{ mt: 2, backgroundColor: '#f2572c', mr: 2 }} onClick={() => setOpen(true)}>
                 Update
             </Button>
-            <UpdateDialogForm open={open} setOpen={setOpen} company={company} handleUpdate={handleUpdate} />
+            <CompanyDialogForm open={open} setOpen={setOpen} company={company} handleUpdate={handleUpdate} />
         </>
 
     )
