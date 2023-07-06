@@ -2,7 +2,7 @@ const skill = Object.freeze({
     JAVASCRIPT: 'JavaScript',
     JAVA: 'Java',
     PYTHON: 'Python',
-    MONGODB: 'MongoDb',
+    MONGODB: 'MongoDB',
     NODEJS: 'Node.js',
     REACTJS: 'React.js',
     MYSQL: 'MySQL',

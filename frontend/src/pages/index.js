@@ -7,6 +7,7 @@ import LoginPage from './loginPage/LoginPage';
 import ProfilePage from './profilePage/ProfilePage';
 import CompanyDetailsPage from './companyDetailsPage/CompanyDetailsPage';
 import JobDetailsPage from './jobDetailsPage/JobDetailsPage';
+import UsersPage from './usersPage/UsersPage';
 
 export {
     CompaniesPage,
@@ -17,5 +18,6 @@ export {
     MyApplicationsPage,
     ProfilePage,
     CompanyDetailsPage,
-    JobDetailsPage
+    JobDetailsPage,
+    UsersPage
 }

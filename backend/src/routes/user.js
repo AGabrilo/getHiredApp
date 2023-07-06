@@ -8,16 +8,16 @@ function init() {
     router.get("/",UserController.getAllUsers)
 
     // delete specific user (admin)
-    // router.delete("/:userId",UserController.deleteUser)
+    router.delete("/:userId",UserController.deleteUser)
 
     // update specific user (admin/user)
-    // router.put("/:userId",UserController.updateUser)
+    router.put("/:userId",UserController.updateUser)
 
     // get specific user (all)
     router.get("/:userId",UserController.getUser)
 
      // create new user (admin/user)
-    // router.post("/:userId",UserController.createUser)
+    router.post("/",UserController.createUser)
 
 }
 

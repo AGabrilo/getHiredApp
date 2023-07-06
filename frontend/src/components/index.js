@@ -16,6 +16,7 @@ import NavBar from './navBar/NavBar';
 import PostedJob from './postedJob/PostedJob';
 import RegisterForm from './registerForm/RegisterForm';
 import TopCompanies from './topCompanies/TopCompanies';
+import UserTable from './userTable/UserTable';
 
 export {
     ApplicationTable,
@@ -36,5 +37,5 @@ export {
     PostedJob,
     RegisterForm,
     TopCompanies,
-    
+    UserTable,
 }

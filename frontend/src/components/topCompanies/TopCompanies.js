@@ -19,7 +19,6 @@ function TopCompanies() {
             });
 
     }, [])
-    console.log('Sorteddd', companies, comp)
     return (
         <>
             {companies ? companies.map((company, i) => {

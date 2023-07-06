@@ -16,8 +16,6 @@ function JobsPage() {
     const skills = useSelector(selectSkillsConf)
     const workLocations = useSelector(selectWorkLocationsConf)
 
-    console.log('JOBBB TYPE', filteredJobType)
-
     const getData = () => {
         fetch('http://localhost:3001/api/job', {
             headers: {
@@ -47,7 +45,8 @@ function JobsPage() {
     }
 
     const getFilteredData = () =>{
-
+        let allFilters = filteredSkills.concat(filteredJobType, filteredWorkLocation)
+        if(allFilters.length)  setFilteredData(jobs.filter((d) => allFilters.every(r => d.skills.concat([d.jobType],[d.workLocation]).includes(r))));
     }
 
     useEffect(() => {
@@ -80,8 +79,8 @@ function JobsPage() {
                     <Grid container item xs={12} md={2} lg={2} sx={{ height: 'fit-content', flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
                         {jobTypes && skills && workLocations ?<Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
                             <JobFilters title={'Job type'} data={jobTypes.map((el)=>el.key)} setFilter={setFilteredJobType} filter={filteredJobType} />
-                            <JobFilters title={'Skills'} data={skills.map((el)=>el.key)} setFilter={setFilteredSkills}/>
-                            <JobFilters title={'Work location'} data={workLocations.map((el)=>el.key)} setFilter={setFilteredWorkLocation}/>
+                            <JobFilters title={'Skills'} data={skills.map((el)=>el.key)} setFilter={setFilteredSkills} filter={filteredSkills}/>
+                            <JobFilters title={'Work location'} data={workLocations.map((el)=>el.key)} setFilter={setFilteredWorkLocation} filter={filteredWorkLocation}/>
                         </Stack> : null}
                         
                     </Grid>

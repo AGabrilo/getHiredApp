@@ -85,7 +85,6 @@ function CompaniesPage() {
     }
 
 
-    console.log('companies:', filteredData)
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>

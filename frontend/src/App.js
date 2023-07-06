@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LandingPage, CompaniesPage, FavouritesPage, JobsPage, MyApplicationsPage, LoginPage, ProfilePage, CompanyDetailsPage, JobDetailsPage } from "./pages";
+import { LandingPage, CompaniesPage, FavouritesPage, JobsPage, MyApplicationsPage, LoginPage, ProfilePage, CompanyDetailsPage, JobDetailsPage, UsersPage } from "./pages";
 import { NavBar } from "./components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -18,6 +18,7 @@ function App() {
             <Route exact path="myapplications" element={<MyApplicationsPage />} />
             <Route  exact path="/login" element={<LoginPage />} />
             <Route  exact path="/myprofile" element={<ProfilePage />} />
+            <Route  exact path="/users" element={<UsersPage />} />
             <Route path="companies/:companyId" element={<CompanyDetailsPage/>} />
             <Route path="jobs/:jobId" element={<JobDetailsPage/>} />
         </Routes>

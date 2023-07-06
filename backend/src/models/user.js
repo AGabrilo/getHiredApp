@@ -39,13 +39,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
-    companyId: {
-        type: Schema.ObjectId,
-        ref: 'company'
-    },
     skills: {
         type: [String],
         enum: Object.values(skill),
+        default:[]
     },
     workExperience: {
         type: [ExperienceSchema],
