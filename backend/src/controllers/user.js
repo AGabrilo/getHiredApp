@@ -12,6 +12,8 @@ module.exports.getAllUsers = async (req, res, next) => {
 
 module.exports.getUser = async (req, res, next) => {
     const {userId} = req.params;
+
+    console.log('getUseeeer controler', userId)
     try{
         const result = await UserService.getUser(userId);
         res.status(200).json(result);
@@ -35,6 +37,7 @@ module.exports.createUser = async (req, res, next) => {
 module.exports.updateUser = async (req, res, next) => {
     const {userId} = req.params;
     const userObject = req.body;
+    console.log('helloo',userObject, userObject.location)
     try{
         const result = await UserService.updateUser(userId, userObject);
         res.status(200).json(result);

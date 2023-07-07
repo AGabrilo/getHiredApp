@@ -1,9 +1,30 @@
 import React from 'react';
-import { Box, Avatar, Typography, Divider, Stack, Grid } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Box, Avatar, Typography, Divider, Stack, Grid, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function EducationItem(props) {
-    const { education } = props;
+    const { education, getData, userData,  i } = props;
+    const newArray = userData.education
+
+    const handleUpdate = (id, updatedObject) => {
+        
+        fetch(`http://localhost:3001/api/user/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({education:newArray}),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                getData()
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+
+    }
     return (
         <>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
@@ -19,7 +40,7 @@ function EducationItem(props) {
                         </Stack>
                     </Grid>
                 </Grid>
-                <Avatar><EditIcon /></Avatar>
+                <IconButton onClick={()=>handleUpdate(userData._id,{education: newArray.splice(i,1)})}><DeleteIcon /></IconButton>
             </Box>
             <Divider />
         </>

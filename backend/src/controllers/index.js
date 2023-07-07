@@ -3,11 +3,13 @@ const CompanyController = require('./company')
 const JobController = require('./job')
 const ApplicationController = require('./application')
 const ConfigurationController = require('./configuration')
+const FavouriteController = require('./favourite')
 
 module.exports = {
     UserController,
     CompanyController,
     JobController,
     ApplicationController,
-    ConfigurationController
+    ConfigurationController,
+    FavouriteController
 }

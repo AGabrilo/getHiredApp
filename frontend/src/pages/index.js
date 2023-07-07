@@ -19,5 +19,5 @@ export {
     ProfilePage,
     CompanyDetailsPage,
     JobDetailsPage,
-    UsersPage
+    UsersPage,
 }

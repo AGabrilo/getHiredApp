@@ -8,6 +8,7 @@ const { EducationModel } = require('./education')
 const { ExperienceModel } = require('./experience')
 const JobModel = require('./job')
 const UserModel = require('./user')
+const FavouriteModel = require('./favourite')
 
 module.exports = {
     applicationStatus,
@@ -19,5 +20,6 @@ module.exports = {
     EducationModel,
     ExperienceModel,
     JobModel,
-    UserModel
+    UserModel,
+    FavouriteModel
 }

@@ -28,10 +28,9 @@ function UsersPage() {
                 }))
             });
     }
-    console.log('rowsssss', rows)
+    
     useEffect(() => {
         getData()
-        console.log('getData')
     }, [])
 
     return (

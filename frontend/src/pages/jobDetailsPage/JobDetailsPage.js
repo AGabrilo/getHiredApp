@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, CardContent, Card, Typography, Stack, Grid, Paper, IconButton, Divider, Chip } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { DeleteCompanyButton, DeleteJobButton, PostedJob, TopCompanies } from '../../components';
+import { DeleteJobButton, TopCompanies } from '../../components';
 import { palette } from '../../utils/palette'
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
@@ -15,6 +15,69 @@ function JobDetailsPage() {
     let { jobId } = useParams();
     const isCompany = true
     const [job, setJob] = useState();
+    const [favourite, setFavourite] = useState([])
+    const getFavourites = () => {
+        fetch('http://localhost:3001/api/favourite/649e9c19f92c6b347d394b33', {
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setFavourite(data)
+            });
+    }
+
+    const checkIfFavourite = (jobId) => {
+        let check = favourite.filter((el) => el.jobId === jobId)
+        if (check.length) return check
+        else return false
+    }
+
+    const handleFavouriteButton = (jobId) => {
+        let check = checkIfFavourite(jobId)
+        console.log(check)
+        if (checkIfFavourite(jobId)) {
+            fetch(`http://localhost:3001/api/favourite/${check[0]._id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                // body: JSON.stringify({ role: localStorage.getItem('role') })
+            })
+                .then((res) => {
+                    res.json()
+                    getFavourites()
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
+
+        }
+        else {
+            fetch(`http://localhost:3001/api/favourite`, {
+                method: 'POST',
+                body: JSON.stringify({ userId: '649e9c19f92c6b347d394b33', jobId: jobId }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    getFavourites()
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
+        }
+    }
+
+    useEffect(() => {
+        getFavourites()
+    }, [])
 
     const getData = () => {
         fetch(`http://localhost:3001/api/job/${jobId}`, {
@@ -71,9 +134,9 @@ function JobDetailsPage() {
                                             </Box>
                                         </Stack>
                                         <Box>
-                                            <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize:20 }}>Apply</Button>
-                                            <IconButton variant="outlined" color="neutral" sx={{ flexGrow: 0 }}>
-                                                <FavoriteBorder />
+                                            <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize: 20 }}>Apply</Button>
+                                            <IconButton variant="outlined" color={checkIfFavourite(job._id) ? "error" : "neutral"} sx={{ mr: 'auto' }} onClick={() => handleFavouriteButton(job._id)} sx={{ flexGrow: 0 }}>
+                                                <FavoriteIcon />
                                             </IconButton>
                                         </Box>
 

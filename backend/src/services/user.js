@@ -18,6 +18,7 @@ module.exports.createUser = async (userObject) => {
 }
 
 module.exports.updateUser = async (userId, userObject) => {
+    console.log("updateUser", {...userObject})
     const filter = {
         _id: userId
     }

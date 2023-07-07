@@ -3,13 +3,15 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, Stack, Typography } from '@mui/material';
 import DeleteDialog from '../deleteDialog/DeleteDialog';
+import UserDialogForm from '../userDialogForm/UserDialogForm';
 
 
 
 function  UserTable(props) {
     const { rows, getData } = props;
     const [open, setOpen] = useState(false)
-    const [id, setId] = useState(false)
+    const [openForm, setOpenForm] =useState(false);
+    const [user, setUser] = useState()
 
     const handleDeleteButton = (id) => {
 console.log('iddd',id)
@@ -23,6 +25,26 @@ console.log('iddd',id)
         })
             .then((res) => {
                 res.json()
+                getData()
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+
+    }
+
+    const handleUpdate = (userId, updatedUserObject) => {
+
+        fetch(`http://localhost:3001/api/user/${userId}`, {
+            method: 'PUT',
+            body: JSON.stringify(updatedUserObject),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
                 getData()
             })
             .catch((err) => {
@@ -64,10 +86,10 @@ console.log('iddd',id)
             minWidth: 230,
             renderCell: (row) =>
                 <Stack direction={'row'} spacing={2}>
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => console.log(row)}>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row) ;setOpenForm(true)}}>
                         Update {console.log('row',row)}
                     </Button>
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setId(row.row._id) ;setOpen(true)}}>Delete</Button>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row) ;setOpen(true)}}>Delete</Button>
                 </Stack>
             ,
         },
@@ -84,7 +106,11 @@ console.log('iddd',id)
                 disableRowSelectionOnClick
                 sx={{ width: '100%' }}
             />
-            <DeleteDialog open={open} setOpen={setOpen} id={id} handleDeleteButton={handleDeleteButton} component='user' />
+            
+          {user ?  <>
+            <DeleteDialog open={open} setOpen={setOpen} id={user._id} handleDeleteButton={handleDeleteButton} component='user' />
+            <UserDialogForm open={openForm} setOpen={setOpenForm} user={user} handleUpdate={handleUpdate} />
+          </> : null }
         </Box>
     );
 }
