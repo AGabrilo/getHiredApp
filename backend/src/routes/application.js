@@ -4,20 +4,23 @@ const { ApplicationController } = require('../controllers')
 
 function init() {
 
-    // get all applications (all)
-    // router.get("/",ApplicationController.getAllJobs)
+    // get all applications (user)
+    router.get("/:userId",ApplicationController.getAllUserApplications)
 
-    // delete specific job (company)
-    // router.delete("/:jobId",ApplicationController.deleteJob)
+     // get all applications (company)
+     router.get("/:companyId",ApplicationController.getAllCompanyApplications)
 
-    // update specific Job (admin/company)
-    // router.put("/:jobId",ApplicationController.updateJob)
+    // delete specific application (user)
+    router.delete("/:applicationId",ApplicationController.deleteUserApplication)
 
-    // get specific Job (all)
-    // router.get("/:jobId",ApplicationController.getJob)
+    // update specific application (company)
+    router.put("/:applicationId",ApplicationController.updateApplicationStatus)
 
-     // create new Job (Company)
-    // router.post("/:jobId",ApplicationController.createJob)
+    // get specific application (all)
+    router.get("/:applicationId",ApplicationController.getApplication)
+
+     // create new application (user)
+    router.post("/",ApplicationController.createApplication)
 
 }
 
