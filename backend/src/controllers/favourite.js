@@ -1,32 +1,30 @@
 const { FavouriteService } = require('../services')
+const AppError = require('../utils/appError')
+const catchAsync = require('../utils/catchAsync')
 
-module.exports.getFavourites = async (req, res, next) => {
-    const {userId} = req.params;
-    try{
-        const result = await FavouriteService.getFavourites(userId);
+module.exports.getFavourites = catchAsync(async (req, res, next) => {
+    const { userId } = req.params;
+    const result = await FavouriteService.getFavourites(userId);
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Favourites not found', 404))
+})
 
-module.exports.createFavouriteJob = async (req, res, next) => {
+module.exports.createFavouriteJob = catchAsync(async (req, res, next) => {
     const favouriteObject = req.body
-    console.log(req.body)
-    try{
-        const result = await FavouriteService.createFavouriteJob(favouriteObject);
+    const result = await FavouriteService.createFavouriteJob(favouriteObject);
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Job is not added to favourite', 400))
+})
 
-module.exports.deleteFavouriteJob = async (req, res, next) => {
-    const {favouriteId} = req.params;
-    try{
-        const result = await FavouriteService.deleteFavouriteJob(favouriteId);
+module.exports.deleteFavouriteJob = catchAsync(async (req, res, next) => {
+    const { favouriteId } = req.params;
+    const result = await FavouriteService.deleteFavouriteJob(favouriteId);
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Job is not removed from favourites', 400))
+})

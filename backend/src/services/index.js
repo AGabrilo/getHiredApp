@@ -4,6 +4,7 @@ const JobService = require('./job')
 const ApplicationService = require('./application')
 const ConfigurationService = require('./configuration')
 const FavouriteService = require('./favourite')
+const AuthService = require('./auth')
 
 module.exports ={
     UserService,
@@ -11,5 +12,6 @@ module.exports ={
     JobService,
     ApplicationService,
     ConfigurationService,
-    FavouriteService
+    FavouriteService,
+    AuthService
 }

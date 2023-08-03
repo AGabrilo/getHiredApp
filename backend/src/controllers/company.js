@@ -1,54 +1,49 @@
 const { CompanyService } = require('../services')
 const { toCompanyObject } = require('../utils/parametersConversion')
+const AppError = require('../utils/appError')
+const catchAsync = require('../utils/catchAsync')
 
-module.exports.getAllCompanies = async (req, res, next) => {
-    try{
-        const result = await CompanyService.getAllCompanies();
+module.exports.getAllCompanies = catchAsync(async (req, res, next) => {
+    const result = await CompanyService.getAllCompanies();
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Companies not found', 404))
+})
 
-module.exports.getCompany = async (req, res, next) => {
-    const {companyId} = req.params;
-    console.log('Get company controller: ', companyId)
-    try{
-        const result = await CompanyService.getCompany(companyId);
+module.exports.getCompany = catchAsync(async (req, res, next) => {
+    const { companyId } = req.params;
+    const result = await CompanyService.getCompany(companyId);
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Company not found', 404))
+})
 
-module.exports.createCompany = async (req, res, next) => {
+module.exports.createCompany = catchAsync(async (req, res, next) => {
     const companyObject = req.body
-    console.log(req.body)
-    try{
-        const result = await CompanyService.createCompany(companyObject);
+    const result = await CompanyService.createCompany(companyObject);
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Company not created', 400))
+})
 
-module.exports.deleteCompany = async (req, res, next) => {
-    const {companyId} = req.params;
-    try{
-        const result = await CompanyService.deleteCompany(companyId);
+module.exports.deleteCompany = catchAsync(async (req, res, next) => {
+    const { companyId } = req.params;
+    const result = await CompanyService.deleteCompany(companyId);
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Company not deleted', 400))
+})
 
-module.exports.updateCompany = async (req, res, next) => {
-    const {companyId} = req.params;
+module.exports.updateCompany = catchAsync(async (req, res, next) => {
+    const { companyId } = req.params;
     const companyObject = toCompanyObject(req);
-    try{
-        const result = await CompanyService.updateCompany(companyId, companyObject);
+    const result = await CompanyService.updateCompany(companyId, companyObject);
+    if (result) {
         res.status(200).json(result);
-    } catch (error) {
-        next(error)
     }
-}
+    else return next(new AppError('Company not updated', 400))
+})
