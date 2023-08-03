@@ -1,6 +1,7 @@
 const { UserService } = require('../services')
 const AppError = require('../utils/appError')
-const catchAsync = require('../utils/catchAsync')
+const catchAsync = require('../utils/catchAsync');
+const { toUserObject } = require('../utils/parametersConversion');
 
 module.exports.getAllUsers = catchAsync(async (req, res, next) => {
 
@@ -32,7 +33,7 @@ module.exports.createUser = catchAsync(async (req, res, next) => {
 
 module.exports.updateUser = catchAsync(async (req, res, next) => {
     const { userId } = req.params;
-    const userObject = req.body;
+    const userObject = toUserObject(req);
     const result = await UserService.updateUser(userId, userObject);
     if (result) {
         res.status(200).json(result);

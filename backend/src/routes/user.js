@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router();
 const { UserController } = require('../controllers')
 const { Authorization, restrictTo } = require('../middlewares/auth')
+const multer = require('../middlewares/multer')
 
 function init() {
 
@@ -21,6 +22,7 @@ function init() {
     router.put("/:userId",
         Authorization,
         restrictTo(['admin', 'user'], 'userId'),
+        multer.fields([{name: 'picture'}, {name:'resume'}]),
         UserController.updateUser)
 
     // get specific user (all)

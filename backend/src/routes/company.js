@@ -2,6 +2,10 @@ const express = require('express')
 const router = express.Router();
 const { CompanyController } = require('../controllers')
 const { Authorization, restrictTo } = require('../middlewares/auth')
+const multer = require('../middlewares/multer')
+// const multer = require('multer')
+
+// const upload= multer({ dest: 'public/img/company'})
 
 function init() {
 
@@ -21,6 +25,7 @@ function init() {
     router.put("/:companyId",
         Authorization,
         restrictTo(['admin', 'company'], 'companyId'),
+        multer.single('picture'),
         CompanyController.updateCompany)
 
     // get specific Company (all)
