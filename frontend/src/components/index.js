@@ -23,6 +23,7 @@ import TopCompanies from './topCompanies/TopCompanies';
 import UserDialogForm from './userDialogForm/UserDialogForm';
 import UserForm from './userForm/UserForm';
 import UserTable from './userTable/UserTable';
+import CompanyTable from './companyTable/CompanyTable';
 
 export {
     ApplicationTable,
@@ -50,4 +51,5 @@ export {
     UserDialogForm,
     UserForm,
     UserTable,
+    CompanyTable
 }

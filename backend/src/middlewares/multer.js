@@ -2,8 +2,10 @@ const multer = require('multer')
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
+        console.log('in multerrr')
         if (req.originalUrl.includes('company')) cb(null, 'public/img/company')
         if (req.originalUrl.includes('user')) cb(null, 'public/img/user')
+        if (req.originalUrl.includes('application')) cb(null, 'public/img/user')
     },
     filename: (req, file, cb) => {
         const fileName = (route, prop) => {
@@ -18,6 +20,7 @@ const fileStorage = multer.diskStorage({
 
         if (req.originalUrl.includes('company')) cb(null, `${fileName('company', 'name')}_${(Date.now() / 1000).toFixed(0)}.${extension}`)
         if (req.originalUrl.includes('user')) cb(null, `${fileName('user', 'firstName')}_${(Date.now() / 1000).toFixed(0)}.${extension}`)
+        if (req.originalUrl.includes('application')) cb(null, `${fileName('application', 'userId')}_${(Date.now() / 1000).toFixed(0)}.${extension}`)
     }
 })
 

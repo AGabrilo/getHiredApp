@@ -14,7 +14,18 @@ module.exports.getAllCompanyApplications = async (companyId) => {
         companyId: companyId
     }
 
-    return await ApplicationModel.find(filter);
+    const test = await ApplicationModel.aggregate([
+        {
+            $lookup: {
+                from: 'job',
+                localField: 'jobId',
+                foreignField: '_id',
+                as: 'jobInfo'
+            }
+        }
+    ]);
+    console.log(test)
+    return test
 }
 
 module.exports.getApplication = async (applicationId) => {
@@ -29,7 +40,7 @@ module.exports.updateApplicationStatus = async (applicationId, status) => {
     const filter = {
         _id: applicationId
     }
-    return await ApplicationModel.findOneAndUpdate(filter, {... status}, { new: true });
+    return await ApplicationModel.findOneAndUpdate(filter, { ...status }, { new: true });
 }
 
 module.exports.deleteUserApplication = async (applicationId) => {
@@ -39,7 +50,7 @@ module.exports.deleteUserApplication = async (applicationId) => {
     return await ApplicationModel.findOneAndDelete(filter);
 }
 
-module.exports.createApplication = async ( applicationObject) => {
+module.exports.createApplication = async (applicationObject) => {
 
-    return await ApplicationModel.create({... applicationObject});
+    return await ApplicationModel.create({ ...applicationObject });
 }

@@ -19,10 +19,6 @@ const ApplicationSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'job'
     },
-    companyId: {
-        type: Schema.ObjectId,
-        ref: 'company'
-    },
     status: {
         type: String,
         enum: Object.values(applicationStatus),

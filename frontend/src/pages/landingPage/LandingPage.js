@@ -22,7 +22,7 @@ function LandingPage() {
               application for hiring students</h1>
               <button onClick={()=>{navigate('/login')}} className="button" data-aos="fade-left" data-aos-duration="1300">Log in</button>
               <h4 className="or-text" data-aos="fade-left" data-aos-duration="1300">or</h4>
-              <button onClick={()=>{navigate('/register')}} className="button" data-aos="fade-left" data-aos-duration="1300">Register now</button>
+              <button onClick={()=>{navigate('/signup')}} className="button" data-aos="fade-left" data-aos-duration="1300">Register now</button>
           </div>
           <div className="img" data-aos="flip-right" data-aos-duration="1200" data-aos-delay="400">
             <img className='landing-image' src={require("../../images/pic2.png")} alt="pic" width="600" height="400" />

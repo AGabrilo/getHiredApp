@@ -34,6 +34,7 @@ module.exports.createUser = catchAsync(async (req, res, next) => {
 module.exports.updateUser = catchAsync(async (req, res, next) => {
     const { userId } = req.params;
     const userObject = toUserObject(req);
+    console.log('reqq', req.body)
     const result = await UserService.updateUser(userId, userObject);
     if (result) {
         res.status(200).json(result);

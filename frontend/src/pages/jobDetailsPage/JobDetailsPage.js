@@ -20,7 +20,7 @@ function JobDetailsPage() {
         fetch('http://localhost:3001/api/favourite/649e9c19f92c6b347d394b33', {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())
@@ -43,7 +43,7 @@ function JobDetailsPage() {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
-                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
                 // body: JSON.stringify({ role: localStorage.getItem('role') })
             })
@@ -62,7 +62,7 @@ function JobDetailsPage() {
                 body: JSON.stringify({ userId: '649e9c19f92c6b347d394b33', jobId: jobId }),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
-                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
             })
                 .then((res) => res.json())
@@ -83,7 +83,7 @@ function JobDetailsPage() {
         fetch(`http://localhost:3001/api/job/${jobId}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())

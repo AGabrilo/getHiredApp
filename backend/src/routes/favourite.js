@@ -13,7 +13,7 @@ function init() {
     // get favourite jobs of user 
     router.get("/:userId",
         Authorization,
-        restrictTo(['user'], 'userId'),
+        restrictTo(['company','user']),
         FavouriteController.getFavourites)
 
     // create new favourite job 

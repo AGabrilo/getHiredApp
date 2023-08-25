@@ -1,5 +1,6 @@
 const { CompanyService } = require('../services')
 const { toCompanyObject } = require('../utils/parametersConversion')
+const { removeFile } = require('../utils/helpers')
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 
@@ -35,7 +36,12 @@ module.exports.deleteCompany = catchAsync(async (req, res, next) => {
     if (result) {
         res.status(200).json(result);
     }
-    else return next(new AppError('Company not deleted', 400))
+    else {
+        removeFile({ path: 'public/img/company/'.concat(result.picture) })
+        return next(new AppError('Company not deleted', 400))
+    }
+
+
 })
 
 module.exports.updateCompany = catchAsync(async (req, res, next) => {

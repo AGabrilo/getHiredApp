@@ -13,8 +13,8 @@ const {component, handleDeleteButton, open, id, setOpen} = props;
           {`Are you sure you want to delete this ${component}?`}
         </DialogTitle>
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Cancel</Button>
-          <Button onClick={()=>{handleDeleteButton(id); setOpen(false)}} autoFocus>
+          <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(false)}>Cancel</Button>
+          <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>{handleDeleteButton(id); setOpen(false)}} autoFocus>
             Delete
           </Button>
         </DialogActions>

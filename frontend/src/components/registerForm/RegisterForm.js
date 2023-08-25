@@ -1,77 +1,200 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useSelector } from 'react-redux';
+import { selectJobsConf } from '../../redux/jobsSlice';
+import { useNavigate } from "react-router-dom";
 import { Box, Button, CardHeader, TextField, Card, CardActions, CardContent, Typography } from '@mui/material';
 
-function RegisterForm() {
-    const initialValues = { username: '', password: '', passwordRepeated: '' }
+function RegisterForm(props) {
+    const { type } = props
+    const navigate = useNavigate();
+    const initialValues = type === 'user' ? { firstName: '', lastName: '', password: '', repeatedPassword: '', type: type, email: '' } : { name: '', password: '', passwordRepeated: '', type: type, email: '' }
     const formik = useFormik({
         initialValues: initialValues,
         onSubmit: (values) => {
             console.log('Values on submit:', values)
+            handleRegister(values)
         }
     })
+    const theUser = useSelector(selectJobsConf)
+    console.log(theUser)
+    const handleRegister = (values) => {
+        fetch("http://localhost:3001/api/auth/signup", {
+            method: "POST",
+            body: JSON.stringify(values),
+            headers: { "Content-type": "application/json;charset=UTF-8" }
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                console.log("User Registered!", data);
+                navigate("/login")
+            })
+            .catch((err) => console.log(err));
+    }
 
     return (
-        <Card sx={{ minWidth: 175, p: 5, backgroundColor: '#fafafa' }}>
+        <Card sx={{ minWidth: 175, maxWidth: 780, p: 5, backgroundColor: '#fafafa' }}>
             <CardHeader
                 title='GetHired Sign up'
             />
             <CardContent>
-                <Box component="form" onSubmit={formik.handleSubmit}>
-                    <TextField
-                        key='username'
-                        type='text'
-                        name='username'
-                        label='Username'
-                        value={formik.values['username']}
-                        onChange={formik.handleChange}
-                        placeholder='Enter your username'
-                        error={Boolean(formik.errors['username'])}
-                        helperText={formik.errors['username']}
-                        margin='normal'
-                        variant='standard'
-                        size='small'
-                        fullWidth
-                    />
-                    <TextField
-                        key='password'
-                        type='password'
-                        name='password'
-                        label='Password'
-                        value={formik.values['password']}
-                        onChange={formik.handleChange}
-                        placeholder='Enter your password'
-                        error={Boolean(formik.errors['password'])}
-                        helperText={formik.errors['password']}
-                        margin='normal'
-                        variant='standard'
-                        size='small'
-                        fullWidth
-                    />
-                    <TextField
-                        key='passwordRepeated'
-                        type='password'
-                        name='passwordRepeated'
-                        label='Repeat password'
-                        value={formik.values['passwordRepeated']}
-                        onChange={formik.handleChange}
-                        placeholder='Enter your password again'
-                        error={Boolean(formik.errors['passwordRepeated'])}
-                        helperText={formik.errors['passwordRepeated']}
-                        margin='normal'
-                        variant='standard'
-                        size='small'
-                        fullWidth
-                    />
-                    <Typography>Already have an account? <Button >Sign in</Button></Typography>
-                </Box>
+                {type === 'user' ?
+                    <Box component="form" onSubmit={formik.handleSubmit}>
+                        <TextField
+                            key='email'
+                            type='text'
+                            name='email'
+                            label='Email'
+                            value={formik.values['email']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your email'
+                            error={Boolean(formik.errors['email'])}
+                            helperText={formik.errors['email']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <TextField
+                            key='firstName'
+                            type='text'
+                            name='firstName'
+                            label='First name'
+                            value={formik.values['firstName']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your first name'
+                            error={Boolean(formik.errors['firstName'])}
+                            helperText={formik.errors['firstName']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <TextField
+                            key='lastName'
+                            type='text'
+                            name='lastName'
+                            label='Last name'
+                            value={formik.values['lastName']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your last name'
+                            error={Boolean(formik.errors['lastName'])}
+                            helperText={formik.errors['lastName']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <TextField
+                            key='password'
+                            type='password'
+                            name='password'
+                            label='Password'
+                            value={formik.values['password']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your password'
+                            error={Boolean(formik.errors['password'])}
+                            helperText={formik.errors['password']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <TextField
+                            key='repeatedPassword'
+                            type='password'
+                            name='repeatedPassword'
+                            label='Repeat password'
+                            value={formik.values['repeatedPassword']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your password again'
+                            error={Boolean(formik.errors['repeatedPassword'])}
+                            helperText={formik.errors['repeatedPassword']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <Typography>Already have an account? <Button onClick={() => navigate("/login")}>Sign in</Button></Typography>
+                        <CardActions>
+                            <Button onClick={formik.handleReset} variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa' }}>
+                                Cancel
+                            </Button>
+                            <Button disabled={Object.keys(formik.errors).length ? true : false} type='submit' variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa' }}> Sign up</Button>
+                        </CardActions>
+                    </Box>
+                    :
+                    <Box component="form" onSubmit={formik.handleSubmit}>
+                        <TextField
+                            key='email'
+                            type='text'
+                            name='email'
+                            label='Email'
+                            value={formik.values['email']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your email'
+                            error={Boolean(formik.errors['email'])}
+                            helperText={formik.errors['email']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <TextField
+                            key='name'
+                            type='text'
+                            name='name'
+                            label='Company name'
+                            value={formik.values['name']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your company name'
+                            error={Boolean(formik.errors['name'])}
+                            helperText={formik.errors['name']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <TextField
+                            key='password'
+                            type='password'
+                            name='password'
+                            label='Password'
+                            value={formik.values['password']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your password'
+                            error={Boolean(formik.errors['password'])}
+                            helperText={formik.errors['password']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <TextField
+                            key='repeatedPassword'
+                            type='password'
+                            name='repeatedPassword'
+                            label='Repeat password'
+                            value={formik.values['repeatedPassword']}
+                            onChange={formik.handleChange}
+                            placeholder='Enter your password again'
+                            error={Boolean(formik.errors['repeatedPassword'])}
+                            helperText={formik.errors['repeatedPassword']}
+                            margin='normal'
+                            variant='standard'
+                            size='small'
+                            fullWidth
+                        />
+                        <Typography>Already have an account? <Button >Sign in</Button></Typography>
+                        <CardActions>
+                            <Button onClick={formik.handleReset} variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa' }}>
+                                Cancel
+                            </Button>
+                            <Button disabled={Object.keys(formik.errors).length ? true : false} type='submit' variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa' }}> Sign up</Button>
+                        </CardActions>
+                    </Box>}
+
             </CardContent>
-            <CardActions>
-                <Button onClick={formik.handleReset} variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa' }}>
-                    Cancel
-                </Button>
-                <Button disabled={Object.keys(formik.errors).length ? true : false} type='submit' variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa' }}> Log in</Button>
-            </CardActions>
         </Card>
     )
 }

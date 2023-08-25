@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, CardContent, Card, Typography, Stack, Grid, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { DeleteCompanyButton, PostedJob, TopCompanies } from '../../components';
+import { useSelector } from 'react-redux';
+import { selectJobsConf } from '../../redux/jobsSlice';
+import { DeleteCompanyButton, JobCard, PostedJob, TopCompanies } from '../../components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import './swiperCustom.css';
 import 'swiper/css';
@@ -13,12 +15,14 @@ function CompanyDetailsPage() {
     let { companyId } = useParams();
     const isCompany = true
     const [company, setCompany] = useState();
+    const allJobs = useSelector(selectJobsConf).filter((el)=>el.companyId ===companyId )
+    console.log('alljobs',allJobs)
 
     const getData = ()=>{
         fetch(`http://localhost:3001/api/company/${companyId}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())
@@ -106,8 +110,8 @@ function CompanyDetailsPage() {
                                             }}
                                             className='swiper-container'
                                         >
-                                            {company.jobsPosted.map((job) => {
-                                                return <SwiperSlide><PostedJob /></SwiperSlide>
+                                            {allJobs.map((job) => {
+                                                return <SwiperSlide><JobCard job={job} /></SwiperSlide>
                                             })}
                                         </Swiper>
 

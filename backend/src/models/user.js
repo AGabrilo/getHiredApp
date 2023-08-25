@@ -20,8 +20,14 @@ const UserSchema = new Schema({
         type: String
     },
     location: {
-        city: String,
-        country: String
+        city: {
+            type: String,
+            default: ''
+        },
+        country: {
+            type: String,
+            default: ''
+        }
     },
     gitHubProfile: {
         type: String

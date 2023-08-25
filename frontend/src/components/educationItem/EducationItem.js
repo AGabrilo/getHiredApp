@@ -1,19 +1,20 @@
 import React from 'react';
 import { Box, Avatar, Typography, Divider, Stack, Grid, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import dateFormat from 'dateformat';
 
 function EducationItem(props) {
-    const { education, getData, userData,  i } = props;
+    const { education, getData, userData, i, details } = props;
     const newArray = userData.education
 
     const handleUpdate = (id, updatedObject) => {
-        
+
         fetch(`http://localhost:3001/api/user/${id}`, {
             method: 'PUT',
-            body: JSON.stringify({education:newArray}),
+            body: JSON.stringify({ education: newArray }),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
             .then((res) => res.json())
@@ -36,11 +37,13 @@ function EducationItem(props) {
                         <Stack>
                             <Typography variant='h5'>{education.schoolName}</Typography>
                             <Typography variant='h6'>{education.degreeType}, {education.degreeName}</Typography>
-                            <Typography variant='body1'>{education.startDate} - {education.endDate}</Typography>
+                            <Typography variant='body1'>{dateFormat(education.startDate, "mmmm dS, yyyy")} - {dateFormat(education.endDate, "mmmm dS, yyyy")}</Typography>
                         </Stack>
                     </Grid>
                 </Grid>
-                <IconButton onClick={()=>handleUpdate(userData._id,{education: newArray.splice(i,1)})}><DeleteIcon /></IconButton>
+                {details ?
+                    null
+                    : <IconButton onClick={() => handleUpdate(userData._id, { education: newArray.splice(i, 1) })}><DeleteIcon /></IconButton>}
             </Box>
             <Divider />
         </>

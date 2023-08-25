@@ -148,8 +148,8 @@ function ExperienceForm(props) {
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button onClick={() => { formik.handleSubmit(); setOpen(false) }} autoFocus>
+                <Button variant='contained' onClick={() => setOpen(false)} sx={{ backgroundColor: '#f2572c' }}>Cancel</Button>
+                <Button  variant='contained' onClick={() => { formik.handleSubmit(); setOpen(false) }} autoFocus sx={{ backgroundColor: '#f2572c' }}>
                     Submit
                 </Button>
             </DialogActions>

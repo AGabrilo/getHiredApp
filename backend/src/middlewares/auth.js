@@ -30,6 +30,7 @@ module.exports.Authorization = catchAsync(async (req, res, next) => {
 exports.restrictTo = ([...roles], paramName) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role) || (req.user.role !== 'admin' && req.params[paramName] && req.params[paramName] !== req.user._id.toHexString())) {
+      console.log('roles',roles,req.user.role)
       return next(new AppError('You do not have permission to perform this action', 403))
     }
     next();

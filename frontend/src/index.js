@@ -5,9 +5,13 @@ import { StyledEngineProvider } from '@mui/material';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { fetchConfiguration } from './redux/configurationSlice';
+import { fetchJob } from './redux/jobsSlice';
+import { fetchUser } from './redux/userSlice';
 
 //start loading initial conf list
 store.dispatch(fetchConfiguration())
+store.dispatch(fetchJob())
+store.dispatch(fetchUser())
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,7 +19,7 @@ root.render(
     <Provider store={store}>
       <App />
     </Provider>
-    
+
   </StyledEngineProvider>,
 );
 

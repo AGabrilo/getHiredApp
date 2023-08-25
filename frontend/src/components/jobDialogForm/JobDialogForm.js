@@ -3,10 +3,12 @@ import { useFormik } from 'formik';
 import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTitle, Autocomplete } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectJobTypesConf, selectSkillsConf, selectWorkLocationsConf } from '../../redux/configurationSlice';
+import { DatePicker } from '@mui/x-date-pickers';
 
 function JobDialogForm(props) {
-    const { job, open, setOpen, handleUpdate } = props;
-    const initialValues = { jobTitle: job.jobTitle, description: job.description, hiringNum: job.hiringNum, location: { city: job.location.city, country: job.location.country }, jobType: job.jobType, skills: job.skills, workLocation: job.workLocation, deadline: job.deadline }
+    const { job, open, setOpen, handleSubmit } = props;
+    const initialValues = job ? { jobTitle: job.jobTitle, description: job.description, hiringNum: job.hiringNum, location: { city: job.location.city, country: job.location.country }, jobType: job.jobType, skills: job.skills, workLocation: job.workLocation, deadline: job.deadline } 
+    : { jobTitle: '', description: '', hiringNum: '', location: { city: '', country: '' }, jobType: '', skills: [], workLocation: '', deadline: '' }
     const jobTypes = useSelector(selectJobTypesConf)
     const skills = useSelector(selectSkillsConf)
     const workLocations = useSelector(selectWorkLocationsConf)
@@ -15,7 +17,7 @@ function JobDialogForm(props) {
         initialValues: initialValues,
         onSubmit: (values) => {
             console.log('Values on submit:', values)
-            handleUpdate(job._id, values)
+            handleSubmit(job._id, values)
         }
     })
 
@@ -25,7 +27,7 @@ function JobDialogForm(props) {
             onClose={() => setOpen(false)}
         >
             <DialogTitle id="alert-dialog-title" sx={{ mt: 1 }}>
-                {`Update job form`}
+                {`Add job form`}
             </DialogTitle>
             <DialogContent>
                 <Box component="form" onSubmit={formik.handleSubmit}>
@@ -142,11 +144,13 @@ function JobDialogForm(props) {
                         )}
                         sx={{ mb: 2 }}
                     />
+                    <DatePicker label="Expiring date" />
+                    
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button onClick={() => { formik.handleSubmit(); setOpen(false) }} autoFocus>
+                <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => setOpen(false)}>Cancel</Button>
+                <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { formik.handleSubmit(); setOpen(false) }} autoFocus>
                     Submit
                 </Button>
             </DialogActions>

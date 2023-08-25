@@ -14,7 +14,7 @@ function DeleteJobButton(props) {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             // body: JSON.stringify({ role: localStorage.getItem('role') })
         })

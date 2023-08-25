@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, CardContent, Card, Typography, Stack, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteDialog from '../deleteDialog/DeleteDialog';
@@ -11,7 +11,7 @@ function CompanyCard(props) {
     const [open, setOpen] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
 
-
+console.log(company)
     return (
         <Card
             orientation="horizontal"
@@ -32,7 +32,7 @@ function CompanyCard(props) {
                             {company.name}
                         </Typography>
                         <Typography variant='h6'>
-                            {company.location.city}, {company.location.country}
+                            {company.location ? company.location.city : null}, {company.location ? company.location.country : null}
                         </Typography>
                     </Box>
 
@@ -47,17 +47,17 @@ function CompanyCard(props) {
                 </Button>
                 {isCompany && !top ?
                     <>
-                        <Button variant="contained" sx={{ mt: 2, backgroundColor: '#f2572c', mr: 2 }} onClick={()=>setOpen(true)}>
+                        <Button variant="contained" sx={{ mt: 2, backgroundColor: '#f2572c', mr: 2 }} onClick={() => setOpen(true)}>
                             Delete
                         </Button>
-                        <Button variant="contained" sx={{ mt: 2, backgroundColor: '#f2572c', mr: 2 }} onClick={()=>setOpenUpdate(true)}>
+                        <Button variant="contained" sx={{ mt: 2, backgroundColor: '#f2572c', mr: 2 }} onClick={() => setOpenUpdate(true)}>
                             Update
                         </Button>
                     </>
                     : null}
             </CardContent>
-          <DeleteDialog open={open} setOpen={setOpen} id={company._id} handleDeleteButton={handleDeleteButton} component='company'/>
-          <CompanyDialogForm open={openUpdate} setOpen={setOpenUpdate} company={company} handleUpdate={handleUpdate}/>
+            <DeleteDialog open={open} setOpen={setOpen} id={company._id} handleDeleteButton={handleDeleteButton} component='company' />
+            <CompanyDialogForm open={openUpdate} setOpen={setOpenUpdate} company={company} handleUpdate={handleUpdate} />
         </Card>
     )
 }

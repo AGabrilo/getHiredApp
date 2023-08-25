@@ -15,7 +15,7 @@ export const fetchConfiguration = createAsyncThunk('configuration/fetchConfigura
         }
     })
         .then((response) => response.json())
-
+console.log('conf slice', response)
     return response
 
 })

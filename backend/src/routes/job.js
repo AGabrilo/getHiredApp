@@ -7,8 +7,8 @@ function init() {
 
     // get all jobs (all)
     router.get("/",
-        Authorization,
-        restrictTo(['user', 'company', 'admin']),
+    Authorization,
+    restrictTo(['user', 'company', 'admin']),
         JobController.getAllJobs)
 
     // delete specific job (company)

@@ -1,49 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Avatar, Typography, CardContent, Button, Card, CardActions, IconButton, Grid, Chip } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { palette } from '../../utils/palette'
+import dateFormat from 'dateformat';
 import { useNavigate } from 'react-router-dom';
+import ApplyForm from '../applyForm/ApplyForm';
 
 
 function JobCard(props) {
-    const { job } = props;
+    const { job, handleApplyButton } = props;
     const shortedSkills = job.skills.length > 3 ? job.skills.slice(0, 3) : job.skills
     const shortedDescription = job.description.length > 200 ? job.description.slice(0, 200) + '...' : job.description;
     const navigate = useNavigate();
     const [favourite, setFavourite] = useState([])
-    const isCompany = false;
+    const [company, setCompany] = useState({})
+    const [open, setOpen] = useState(false);
+    const isCompany = localStorage.getItem('role') === 'company'? true :false;
 
 
     const getData = () => {
         fetch('http://localhost:3001/api/favourite/649e9c19f92c6b347d394b33', {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())
             .then((data) => {
+                console.log('dataa', data)
                 setFavourite(data)
             });
+            
+                fetch(`http://localhost:3001/api/company/${job.companyId}`, {
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setCompany(data)
+                    });
+        
     }
 
     const checkIfFavourite = (jobId) => {
         let check = favourite.filter((el) => el.jobId === jobId)
+        console.log(check)
         if (check.length) return check
         else return false
     }
 
     const handleFavouriteButton = (jobId) =>{
         let check  = checkIfFavourite(jobId)
-        console.log(check)
         if(checkIfFavourite(jobId)){
             fetch(`http://localhost:3001/api/favourite/${check[0]._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
-                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
-                // body: JSON.stringify({ role: localStorage.getItem('role') })
             })
                 .then((res) => {
                     res.json()
@@ -60,7 +75,7 @@ function JobCard(props) {
                 body: JSON.stringify({userId:'649e9c19f92c6b347d394b33', jobId:jobId}),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
-                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
             })
                 .then((res) => res.json())
@@ -82,7 +97,6 @@ function JobCard(props) {
             variant="outlined"
             sx={{
                 width: '100%',
-                // to make the card resizable
                 overflow: 'auto',
                 resize: 'horizontal',
                 borderRadius: 2.5
@@ -98,7 +112,7 @@ function JobCard(props) {
             >
                 <Avatar src="../../../public/logo192.png" sx={{ width: 56, height: 56 }} />
                 <Typography variant="h6">
-                    {job.datePosted}
+                    {dateFormat(job.datePosted, "mmmm dS, yyyy")}
                 </Typography>
             </Box>
             <CardContent>
@@ -106,12 +120,12 @@ function JobCard(props) {
                     {job.jobTitle}
                 </Typography>
                 <Typography variant="body1">
-                    {job.companyId}
+                    {company.name ? company.name : ''}
                 </Typography>
                 <Grid container spacing={2}>
                     {shortedSkills.map((skill, i) => {
                         return <Grid item key={i} >
-                            <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: palette[i] }} />
+                            <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: '#ccccff' }} />
                         </Grid>
                     })}
                 </Grid>
@@ -120,17 +134,31 @@ function JobCard(props) {
                 </Typography>
             </CardContent>
             <CardActions buttonFlex="0 1 120px">
+                {isCompany ? 
+                null:
                 <IconButton variant="outlined" color={checkIfFavourite(job._id)?"error":"neutral"} sx={{ mr: 'auto' }} onClick={()=>handleFavouriteButton(job._id)}>
                     <FavoriteIcon />
-                </IconButton>
+                </IconButton> }
                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { navigate(`/jobs/${job._id}`) }}>
                     View
                 </Button>
-                {isCompany ? null :
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }}>
+                {isCompany ? 
+                <>
+                <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
+                        Modify
+                    </Button>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
+                        Delete
+                    </Button>
+                </> :
+                <>
+                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
                         Apply
-                    </Button>}
-
+                    </Button>
+                    <ApplyForm open={open} setOpen={setOpen} id={job._id} handleApplyButton={handleApplyButton}/>
+                </>
+                   }
+                    
             </CardActions>
         </Card>
 

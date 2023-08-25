@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Avatar, Typography, Divider, Stack, Grid, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import dateFormat from 'dateformat';
 
 function ExperienceItem(props) {
-    const {experience, getData, userData,  i } = props;
+    const {experience, getData, userData,  i, details } = props;
     const newArray = userData.workExperience
 
     console.log(newArray)
@@ -16,7 +17,7 @@ function ExperienceItem(props) {
             body: JSON.stringify({workExperience:newArray}),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
             .then((res) => res.json())
@@ -40,12 +41,14 @@ function ExperienceItem(props) {
                         <Stack>
                             <Typography variant='h5'>{experience.jobTitle}</Typography>
                             <Typography variant='h6'>{experience.companyName}, {experience.location.city}</Typography>
-                            <Typography variant='body1'>{experience.startDate} - {experience.endDate}</Typography>
+                            <Typography variant='body1'>{dateFormat(experience.startDate, "mmmm dS, yyyy")} - {dateFormat(experience.endDate, "mmmm dS, yyyy")}</Typography>
                             <Typography variant='body1'>{experience.description}</Typography>
                         </Stack>
                     </Grid>
                 </Grid>
-                <IconButton onClick={()=>handleUpdate(userData._id,{workExperience: newArray.splice(i,1)})}><DeleteIcon /></IconButton>
+                {details ?
+                null
+            : <IconButton onClick={()=>handleUpdate(userData._id,{workExperience: newArray.splice(i,1)})}><DeleteIcon /></IconButton>} 
             </Box>
             <Divider />
         </>

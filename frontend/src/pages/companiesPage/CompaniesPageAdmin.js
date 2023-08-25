@@ -4,11 +4,11 @@ import { UserTable } from '../../components';
 
 
 
-function UsersPage() {
+function CompaniesPageAdmin() {
     const [rows, setRows] = useState([])
 
     const getData = () => {
-        fetch('http://localhost:3001/api/user', {
+        fetch('http://localhost:3001/api/company', {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -20,10 +20,9 @@ function UsersPage() {
                     return {
                         id: i,
                         _id: el._id,
-                        firstName: el.firstName,
-                        username: el.username,
+                        name: el.name,
+                        employersNum: el.employersNum,
                         email: el.email,
-                        lastName: el.lastName,
                     }
                 }))
             });
@@ -36,8 +35,8 @@ function UsersPage() {
     return (
         <Box sx={{ backgroundColor: '#e9e8eb', height: '100vh' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', py: 8, mx: 4, backgroundColor: '#e9e8eb' }}>
-                <Typography variant='h4' sx={{ mb: 4 }}>Users</Typography>
-                {rows.length ? <UserTable rows={rows} getData={getData} type='user' /> : null}
+                <Typography variant='h4' sx={{ mb: 4 }}>Companies</Typography>
+                {rows.length ? <UserTable rows={rows} getData={getData} type='company' /> : null}
 
             </Box>
         </Box>
@@ -45,4 +44,4 @@ function UsersPage() {
     )
 }
 
-export default UsersPage;
+export default CompaniesPageAdmin;

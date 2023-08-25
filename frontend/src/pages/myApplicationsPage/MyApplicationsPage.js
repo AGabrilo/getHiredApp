@@ -8,18 +8,20 @@ function MyApplicationsPage() {
     const [applications, setApplications] = useState([]);
     const [filteredApplications, setFilteredApplications] = useState([]);
     const [filter, setFilter] = useState('')
+    const userId = localStorage.getItem('id')
 
 
 
     const getData = () => {
-        fetch('http://localhost:3001/api/application/649e9c19f92c6b347d394b33', {
+        fetch(`http://localhost:3001/api/application/user/649e9c19f92c6b347d394b33`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())
             .then((data) => {
+                console.log(data)
                 setApplications(data)
                 setFilteredApplications(data)
             });
@@ -27,7 +29,7 @@ function MyApplicationsPage() {
         fetch('http://localhost:3001/api/user', {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())
@@ -38,7 +40,7 @@ function MyApplicationsPage() {
         fetch('http://localhost:3001/api/job', {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())
@@ -56,7 +58,6 @@ function MyApplicationsPage() {
     }, [filter])
 
     const getFilteredData = () => {
-console.log('hehee', applications.filter((el) => el.status === filter))
         if (filter) setFilteredApplications(applications.filter((el) => el.status === filter))
         else setFilteredApplications(applications)
 
@@ -74,25 +75,25 @@ console.log('hehee', applications.filter((el) => el.status === filter))
                         </Grid>
                         <Grid item>
                             <IconButton onClick={() => setFilter('')}>
-                                <Chip label="All" variant="outlined" />
+                                <Chip label="All" variant="outlined" sx={{backgroundColor: '#f2572c', color: '#fafafa' }}/>
                             </IconButton>
 
                         </Grid>
 
                         <Grid item>
                             <IconButton onClick={() => setFilter('Pending')}>
-                                <Chip label="Pending" variant="outlined" />
+                                <Chip label="Pending" variant="outlined" sx={{backgroundColor: '#f2572c', color: '#fafafa' }}/>
                             </IconButton>
                         </Grid>
 
                         <Grid item>
-                            <IconButton onClick={() => setFilter('On hold')}>
-                                <Chip label="On hold" variant="outlined" />
+                            <IconButton onClick={() => setFilter('Rejected')}>
+                                <Chip label="Rejected" variant="outlined" sx={{backgroundColor: '#f2572c', color: '#fafafa' }}/>
                             </IconButton>
                         </Grid>
                         <Grid item>
                             <IconButton onClick={() => setFilter('Candidate')}>
-                                <Chip label="Candidate" variant="outlined" />
+                                <Chip label="Candidate" variant="outlined" sx={{backgroundColor: '#f2572c', color: '#fafafa' }}/>
                             </IconButton>
                         </Grid>
                     </Grid>

@@ -12,7 +12,7 @@ function CompaniesPage() {
         fetch('http://localhost:3001/api/company', {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
             .then((response) => response.json())
@@ -50,7 +50,7 @@ function CompaniesPage() {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             // body: JSON.stringify({ role: localStorage.getItem('role') })
         })
@@ -71,7 +71,7 @@ function CompaniesPage() {
             body: JSON.stringify(updatedCompanyObject),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
             .then((res) => res.json())
@@ -84,11 +84,10 @@ function CompaniesPage() {
 
     }
 
-
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
-            <SearchComponent setLocation={setLocation} setName={setName} component='Company' />
+                <SearchComponent setLocation={setLocation} setName={setName} component='Company' />
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'no-wrap' }}>
                     <Grid container spacing={2} item xs={12} md={12} lg={12} >

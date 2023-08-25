@@ -5,9 +5,14 @@ import JobsPage from './jobsPage/JobsPage';
 import MyApplicationsPage from './myApplicationsPage/MyApplicationsPage';
 import LoginPage from './loginPage/LoginPage';
 import ProfilePage from './profilePage/ProfilePage';
+import ProfilePageCompany from './profilePage/ProfilePageCompany';
 import CompanyDetailsPage from './companyDetailsPage/CompanyDetailsPage';
 import JobDetailsPage from './jobDetailsPage/JobDetailsPage';
 import UsersPage from './usersPage/UsersPage';
+import SignUpPage from './signUpPage/SignUpPage';
+import MyJobsPage from './myJobsPage/MyJobsPage';
+import UserDetailsPage from './userDetailsPage/UserDetailsPage';
+import CompaniesPageAdmin from './companiesPage/CompaniesPageAdmin';
 
 export {
     CompaniesPage,
@@ -20,4 +25,9 @@ export {
     CompanyDetailsPage,
     JobDetailsPage,
     UsersPage,
+    SignUpPage,
+    MyJobsPage,
+    ProfilePageCompany,
+    UserDetailsPage,
+    CompaniesPageAdmin
 }

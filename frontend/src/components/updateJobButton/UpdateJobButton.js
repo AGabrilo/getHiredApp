@@ -13,7 +13,7 @@ function UpdateJobButton(props) {
             body: JSON.stringify(updatedJobObject),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
             .then((res) => res.json())

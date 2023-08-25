@@ -1,6 +1,6 @@
 const applicationStatus = Object.freeze({
     PENDING: 'Pending',
-    ON_HOLD: 'On hold',
+    REJECTED: 'Rejected',
     CANDIDATE: 'Candidate'
 })
 

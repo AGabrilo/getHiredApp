@@ -7,7 +7,7 @@ import { selectJobTypesConf, selectSkillsConf, selectWorkLocationsConf } from '.
 function UserForm(props) {
     const { user, open, setOpen, handleUpdate } = props;
     const initialValues = {
-        firstName: user.firstName, lastName: user.lastName, username: user.username, location: { city: user.location.city, country: user.location.country }, email: user.email, skills: user.skills,
+        firstName: user.firstName, lastName: user.lastName, summary: user.summary, location: { city: user.location ? user.location.city : '', country: user.location ? user.location.country : '' }, email: user.email, skills: user.skills,
         workExperience: user.workExperience.map((el) => {
             return {
                 jobTitle: el.jobTitle,
@@ -82,15 +82,15 @@ function UserForm(props) {
                         fullWidth
                     />
                     <TextField
-                        key='username'
+                        key='summary'
                         type='text'
-                        name='username'
-                        label='Username'
-                        value={formik.values['username']}
+                        name='summary'
+                        label='summary'
+                        value={formik.values['summary']}
                         onChange={formik.handleChange}
-                        placeholder='Enter your username'
-                        error={Boolean(formik.errors['username'])}
-                        helperText={formik.errors['username']}
+                        placeholder='Enter your summary'
+                        error={Boolean(formik.errors['summary'])}
+                        helperText={formik.errors['summary']}
                         margin='normal'
                         variant='standard'
                         size='small'

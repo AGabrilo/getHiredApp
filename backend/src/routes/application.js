@@ -2,19 +2,20 @@ const express = require('express')
 const router = express.Router();
 const { ApplicationController } = require('../controllers')
 const { Authorization, restrictTo } = require('../middlewares/auth')
+const multer = require('../middlewares/multer')
 
 function init() {
 
     // get all applications for user (user)
-    router.get("/:userId",
+    router.get("/user/:userId",
         Authorization,
-        restrictTo(['user'], 'userId'),
+        restrictTo(['user','company']),
         ApplicationController.getAllUserApplications)
 
     // get all applications for company (company)
     router.get("/:companyId",
-        Authorization,
-        restrictTo(['company'], 'companyId'),
+        // Authorization,
+        // restrictTo(['company']),
         ApplicationController.getAllCompanyApplications)
 
     // delete specific application (user)
@@ -37,8 +38,7 @@ function init() {
 
     // create new application (user)
     router.post("/",
-        Authorization,
-        restrictTo(['user']),
+    multer.fields([ {name:'resume'}]),
         ApplicationController.createApplication)
 }
 

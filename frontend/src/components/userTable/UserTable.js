@@ -7,21 +7,20 @@ import UserDialogForm from '../userDialogForm/UserDialogForm';
 
 
 
-function  UserTable(props) {
-    const { rows, getData } = props;
+function UserTable(props) {
+    const { rows, getData, type } = props;
     const [open, setOpen] = useState(false)
-    const [openForm, setOpenForm] =useState(false);
+    const [openForm, setOpenForm] = useState(false);
     const [user, setUser] = useState()
+    const [company, setCompany] = useState()
 
     const handleDeleteButton = (id) => {
-console.log('iddd',id)
         fetch(`http://localhost:3001/api/user/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
-            // body: JSON.stringify({ role: localStorage.getItem('role') })
         })
             .then((res) => {
                 res.json()
@@ -40,7 +39,7 @@ console.log('iddd',id)
             body: JSON.stringify(updatedUserObject),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
             .then((res) => res.json())
@@ -53,7 +52,7 @@ console.log('iddd',id)
 
     }
 
-    const columns = [
+    const columns = type === 'user' ? [
         { field: 'id', headerName: 'ID', flex: 1, minWidth: 60 },
         {
             field: 'firstName',
@@ -68,12 +67,6 @@ console.log('iddd',id)
             minWidth: 110
         },
         {
-            field: 'username',
-            headerName: 'Username',
-            flex: 1,
-            minWidth: 160
-        },
-        {
             field: 'email',
             headerName: 'Email',
             flex: 1,
@@ -81,19 +74,56 @@ console.log('iddd',id)
         },
         {
             field: "action",
-            headerName:"",
+            headerName: "",
             flex: 1,
             minWidth: 230,
             renderCell: (row) =>
                 <Stack direction={'row'} spacing={2}>
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row) ;setOpenForm(true)}}>
-                        Update {console.log('row',row)}
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpenForm(true) }}>
+                        Update {console.log('row', row)}
                     </Button>
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row) ;setOpen(true)}}>Delete</Button>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpen(true) }}>Delete</Button>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpen(true) }}>View</Button>
                 </Stack>
             ,
         },
-    ];
+    ]
+        : [
+            { field: 'id', headerName: 'ID', flex: 1, minWidth: 60 },
+            {
+                field: 'name',
+                headerName: 'Company name',
+                flex: 1,
+                minWidth: 110
+            },
+            {
+                field: 'employersNum',
+                headerName: 'Number of employers',
+                flex: 1,
+                minWidth: 110
+            },
+            {
+                field: 'email',
+                headerName: 'Email',
+                flex: 1,
+                minWidth: 160
+            },
+            {
+                field: "action",
+                headerName: "",
+                flex: 1,
+                minWidth: 230,
+                renderCell: (row) =>
+                    <Stack direction={'row'} spacing={2}>
+                        <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpenForm(true) }}>
+                            Update {console.log('row', row)}
+                        </Button>
+                        <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpen(true) }}>Delete</Button>
+                        <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpen(true) }}>View</Button>
+                    </Stack>
+                ,
+            },
+        ];
 
 
     return (
@@ -106,11 +136,11 @@ console.log('iddd',id)
                 disableRowSelectionOnClick
                 sx={{ width: '100%' }}
             />
-            
-          {user ?  <>
-            <DeleteDialog open={open} setOpen={setOpen} id={user._id} handleDeleteButton={handleDeleteButton} component='user' />
-            <UserDialogForm open={openForm} setOpen={setOpenForm} user={user} handleUpdate={handleUpdate} />
-          </> : null }
+
+            {user ? <>
+                <DeleteDialog open={open} setOpen={setOpen} id={user._id} handleDeleteButton={handleDeleteButton} component='user' />
+                <UserDialogForm open={openForm} setOpen={setOpenForm} user={user} handleUpdate={handleUpdate} />
+            </> : null}
         </Box>
     );
 }
