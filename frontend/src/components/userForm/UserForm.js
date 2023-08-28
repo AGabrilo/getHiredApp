@@ -20,16 +20,7 @@ function UserForm(props) {
                 endDate: el.endDate,
                 description: el.description
             }
-        }),
-        education: user.education.map((el) => {
-            return {
-                degreeType: el.degreeType,
-                degreeName: el.degreeName,
-                startDate: el.startDate,
-                endDate: el.endDate,
-                schoolName: el.schoolName
-            }
-        }),
+        })
     }
     const skills = useSelector(selectSkillsConf)
 
@@ -252,89 +243,6 @@ function UserForm(props) {
                         </>
                     })}
 
-
-{user.education.map((el, i) => {
-                        return <>
-                            <Typography variant='h6' sx={{ mt: 2 }}>{i + 1}. Education</Typography>
-                            <TextField
-                                key='education.degreeType'
-                                type='text'
-                                name={`education.${i}.degreeType`}
-                                label='Degree type'
-                                value={formik.values['education'][i].degreeType}
-                                onChange={formik.handleChange}
-                                placeholder='Enter degree type'
-                                error={Boolean(formik.errors['education.degreeType'])}
-                                helperText={formik.errors['education.degreeType']}
-                                margin='normal'
-                                variant='standard'
-                                size='small'
-                                fullWidth
-                            />
-                            <TextField
-                                key='education.degreeName'
-                                type='text'
-                                name={`education.${i}.degreeName`}
-                                label='Degree name'
-                                value={formik.values['education'][i].degreeName}
-                                onChange={formik.handleChange}
-                                placeholder='Enter degree name'
-                                error={Boolean(formik.errors['education.degreeName'])}
-                                helperText={formik.errors['education.degreeName']}
-                                margin='normal'
-                                variant='standard'
-                                size='small'
-                                fullWidth
-                            />
-                             <TextField
-                                key='education.schoolName'
-                                type='text'
-                                name={`education.${i}.schoolName`}
-                                label='School name'
-                                value={formik.values['education'][i].schoolName}
-                                onChange={formik.handleChange}
-                                placeholder='Enter school name'
-                                error={Boolean(formik.errors['education.schoolName'])}
-                                helperText={formik.errors['education.schoolName']}
-                                margin='normal'
-                                variant='standard'
-                                size='small'
-                                fullWidth
-                            />
-                            <TextField
-                                key='education.startDate'
-                                type='text'
-                                name={`education.${i}.startDate`}
-                                label='Start date'
-                                value={formik.values['education'][i].startDate}
-                                onChange={formik.handleChange}
-                                placeholder='Enter start date'
-                                error={Boolean(formik.errors['education.startDate'])}
-                                helperText={formik.errors['education.startDate']}
-                                margin='normal'
-                                variant='standard'
-                                size='small'
-                                fullWidth
-                            />
-                            <TextField
-                                key='education.endDate'
-                                type='text'
-                                name={`education.${i}.endDate`}
-                                label='End date'
-                                value={formik.values['education'][i].endDate}
-                                onChange={formik.handleChange}
-                                placeholder='Enter end date'
-                                error={Boolean(formik.errors['education.endDate'])}
-                                helperText={formik.errors['education.endDate']}
-                                margin='normal'
-                                variant='standard'
-                                size='small'
-                                fullWidth
-                            />
-                        </>
-                    })}
-
-
                     <Autocomplete
                         multiple
                         size='small'
@@ -347,7 +255,7 @@ function UserForm(props) {
                         renderInput={(params) => (
                             <TextField {...params} label={'Skills'} />
                         )}
-                        sx={{ mb: 2, mt:2 }}
+                        sx={{ mb: 2, mt: 2 }}
                     />
                 </Box>
             </DialogContent>

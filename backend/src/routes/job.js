@@ -1,14 +1,16 @@
 const express = require('express')
 const router = express.Router();
 const { JobController } = require('../controllers')
-const { Authorization, restrictTo } = require('../middlewares/auth')
+const { Authorization, restrictTo } = require('../middlewares/auth');
+const { filterParams } = require('../middlewares');
 
 function init() {
 
     // get all jobs (all)
     router.get("/",
-    Authorization,
-    restrictTo(['user', 'company', 'admin']),
+        Authorization,
+        restrictTo(['user', 'company', 'admin']),
+        filterParams,
         JobController.getAllJobs)
 
     // delete specific job (company)

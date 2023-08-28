@@ -3,7 +3,8 @@ const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 
 module.exports.getAllJobs = catchAsync(async (req, res, next) => {
-    const result = await JobService.getAllJobs();
+    const {skill, jobType, workLocation} = req.query
+    const result = await JobService.getAllJobs(skill, jobType, workLocation);
     if (result) {
         res.status(200).json(result);
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { JobFilters, JobCard, SearchComponent } from '../../components';
 import { useSelector } from 'react-redux';
 import { selectJobsConf } from '../../redux/jobsSlice';
@@ -17,21 +17,22 @@ function JobsPage() {
     const skills = useSelector(selectSkillsConf)
     const workLocations = useSelector(selectWorkLocationsConf)
     const allJobs = useSelector(selectJobsConf)
+    const noDataWidth = window.innerWidth - 300
+    const queryParams = new URLSearchParams()
 
-    // const getData = () => {
-    //     fetch('http://localhost:3001/api/job', {
-    //         headers: {
-    //             'Content-type': 'application/json; charset=UTF-8',
-    //             'Authorization': 'Bearer ' + localStorage.getItem('token')
-    //         }
-    //     })
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setJobs(data)
-    //             setFilteredData(data)
-    //         });
-    // }
-console.log(allJobs)
+    const getData = () => {
+        fetch(`http://localhost:3001/api/job?` + queryParams.toString(), {
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setFilteredData(data)
+            });
+    }
+    console.log(allJobs)
     const getSearchedData = () => {
         console.log(location, name)
         if (!name && !location) {
@@ -48,13 +49,33 @@ console.log(allJobs)
     }
 
     const getFilteredData = () => {
-        let allFilters = filteredSkills.concat(filteredJobType, filteredWorkLocation)
-        if (allFilters.length) setFilteredData(jobs.filter((d) => allFilters.every(r => d.skills.concat([d.jobType], [d.workLocation]).includes(r))));
+        if (filteredJobType.length) {
+            for (let jobType of filteredJobType) {
+                queryParams.append('jobType', jobType)
+            }
+        } else {
+            queryParams.delete("jobType")
+        }
+        if (filteredSkills.length) {
+            for (let skill of filteredSkills) {
+                queryParams.append('skill', skill)
+            }
+        } else {
+            queryParams.delete("skill")
+        }
+        if (filteredWorkLocation.length) {
+            for (let workLocation of filteredWorkLocation) {
+                queryParams.append('workLocation', workLocation)
+            }
+        } else {
+            queryParams.delete("workLocation")
+        }
+        getData()
     }
 
-    // useEffect(() => {
-    //     getData()
-    // }, [])
+    useEffect(() => {
+        getData()
+    }, [])
 
     useEffect(() => {
         getSearchedData()
@@ -65,15 +86,15 @@ console.log(allJobs)
     }, [filteredJobType, filteredSkills, filteredWorkLocation])
 
     const handleApplyButton = (formData) => {
-        console.log('form entriess',formData.entries())
-        for (var [key, value] of formData.entries()) { 
-            console.log(key, value);
-           }
+        console.log('form entriess', formData.entries())
+        for (var [key, value] of formData.entries()) {
+            console.log(key, "----", value);
+        }
         fetch(`http://localhost:3001/api/application`, {
             method: 'POST',
             body: formData
         })
-            .then((res) => {res.json(); console.log('done')})
+            .then((res) => { res.json(); console.log('done') })
             .catch((err) => {
                 console.log(err.message);
             });
@@ -82,16 +103,24 @@ console.log(allJobs)
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
+
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
                 <SearchComponent setLocation={setLocation} setName={setName} component='Job' />
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'no-wrap' }}>
-                    <Grid container spacing={2} item xs={12} md={9} lg={9} >
-                        {filteredData.map((job, i) => {
-                            return <Grid item md={4} lg={4} key={i}>
-                                <JobCard job={job} handleApplyButton={handleApplyButton} />
-                            </Grid>
-                        })}
+                    <Grid container spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%' }}>
+                        {filteredData.length ?
+                            filteredData.map((job, i) => {
+                                return <Grid container item sm={12} md={6} lg={6} xl={4} key={i}>
+                                    <JobCard job={job} handleApplyButton={handleApplyButton} />
+                                </Grid>
+                            })
+                            : <Grid item sm={12} md={12} lg={12} xl={12} key={'No data'} sx={{ width: noDataWidth, }}>
+                                <Box sx={{ width: '100%' }}>
+                                    <Typography variant='h5'> No data</Typography>
+                                </Box>
 
+                            </Grid>
+                        }
 
                     </Grid>
 

@@ -13,6 +13,8 @@ import SignUpPage from './signUpPage/SignUpPage';
 import MyJobsPage from './myJobsPage/MyJobsPage';
 import UserDetailsPage from './userDetailsPage/UserDetailsPage';
 import CompaniesPageAdmin from './companiesPage/CompaniesPageAdmin';
+import NoDataPage from './noDataPage/NoDataPage';
+
 
 export {
     CompaniesPage,
@@ -29,5 +31,6 @@ export {
     MyJobsPage,
     ProfilePageCompany,
     UserDetailsPage,
-    CompaniesPageAdmin
+    CompaniesPageAdmin,
+    NoDataPage
 }

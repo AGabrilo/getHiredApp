@@ -29,7 +29,7 @@ console.log('jobsss',jobs)
     return (
         <Stack direction={'column'} spacing={3}>
             {jobs.length? jobs.map((job, i)=>{
-                return <JobCard job={job}/>
+                return <JobCard job={job} fav/>
             }) :null}
         </Stack>
     )

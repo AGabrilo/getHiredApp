@@ -5,6 +5,7 @@ const ApplicationController = require('./application')
 const ConfigurationController = require('./configuration')
 const FavouriteController = require('./favourite')
 const AuthController = require('./auth')
+const NotificationController = require('./notification')
 
 module.exports = {
     UserController,
@@ -13,5 +14,6 @@ module.exports = {
     ApplicationController,
     ConfigurationController,
     FavouriteController,
-    AuthController
+    AuthController,
+    NotificationController
 }

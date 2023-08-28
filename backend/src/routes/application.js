@@ -9,7 +9,7 @@ function init() {
     // get all applications for user (user)
     router.get("/user/:userId",
         Authorization,
-        restrictTo(['user','company']),
+        restrictTo(['user', 'company']),
         ApplicationController.getAllUserApplications)
 
     // get all applications for company (company)
@@ -38,7 +38,7 @@ function init() {
 
     // create new application (user)
     router.post("/",
-    multer.fields([ {name:'resume'}]),
+        multer.fields([{ name: 'resume' }]),
         ApplicationController.createApplication)
 }
 

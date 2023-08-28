@@ -6,12 +6,12 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { fetchConfiguration } from './redux/configurationSlice';
 import { fetchJob } from './redux/jobsSlice';
-import { fetchUser } from './redux/userSlice';
+import { fetchUsers } from './redux/userSlice';
 
 //start loading initial conf list
 store.dispatch(fetchConfiguration())
 store.dispatch(fetchJob())
-store.dispatch(fetchUser())
+store.dispatch(fetchUsers())
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

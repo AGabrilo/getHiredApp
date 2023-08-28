@@ -1,7 +1,11 @@
-const { UserService } = require('../services')
+const { UserService, ApplicationService } = require('../services')
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync');
 const { toUserObject } = require('../utils/parametersConversion');
+const path = require('path');
+// filesystem module
+const fs = require("fs");
+const { File } = require('buffer');
 
 module.exports.getAllUsers = catchAsync(async (req, res, next) => {
 
@@ -33,8 +37,9 @@ module.exports.createUser = catchAsync(async (req, res, next) => {
 
 module.exports.updateUser = catchAsync(async (req, res, next) => {
     const { userId } = req.params;
+    const loggedUser = req.user
     const userObject = toUserObject(req);
-    console.log('reqq', req.body)
+    console.log('reqq', req.files)
     const result = await UserService.updateUser(userId, userObject);
     if (result) {
         res.status(200).json(result);
@@ -44,9 +49,33 @@ module.exports.updateUser = catchAsync(async (req, res, next) => {
 
 module.exports.deleteUser = catchAsync(async (req, res, next) => {
     const { userId } = req.params;
-    const result = await UserService.deleteUser(userId);
+    const loggedUser = req.user
+    const result = await UserService.deleteUser(userId, loggedUser);
     if (result) {
         res.status(200).json(result);
     }
     else return next(new AppError('User not deleted', 400))
+})
+
+module.exports.downloadResume = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const result = await ApplicationService.getApplication(id);
+    if (result) {
+        let file = '../../public'+ result.resume
+        try {
+            res.download(path.join(__dirname, file), function (err) {
+                        if (err) {
+                            console.log("Error");
+                            console.log(err);
+                        } else {
+                            console.log("Success");
+                        } }) 
+            
+        } catch (err) {
+            console.log("Error: " + err);
+        } finally {
+        } 
+    }
+    else return next(new AppError('Application not found', 404))
+
 })

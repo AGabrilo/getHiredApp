@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTitle, Typography } from '@mui/material';
 
-function ApplyForm(props) {
+function PictureForm(props) {
   const { open, setOpen, id, handleApplyButton } = props;
   const [fileList, setFileList] = useState([]);
-  const initialValues = { resume: '' }
+  const initialValues = { picture: '' }
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: () => {
-      const formData = new FormData();
-      let userId = localStorage.getItem('id')
-      formData.append("resume", fileList[0])
-      formData.append("userId", userId)
-      formData.append("jobId", id)
-      handleApplyButton(formData)
+    //   const formData = new FormData();
+    //   formData.append("picture", fileList[0])
+      handleApplyButton(id,{picture:fileList[0] })
     }
   })
   console.log(fileList)
@@ -25,12 +22,12 @@ function ApplyForm(props) {
       onClose={() => setOpen(false)}
     >
       <DialogTitle id="alert-dialog-title" sx={{ mt: 1 }}>
-        {`Apply for job`}
+        {`Change profile picture`}
       </DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={formik.handleSubmit}>
-          <Typography variant='h6'>My resume document</Typography>
-          <input type="file" name='resume' onChange={(e) => setFileList(e.target.files)} multiple />
+          <Typography variant='h6'>My profile picture</Typography>
+          <input type="file" name='picture' onChange={(e) => setFileList(e.target.files)} multiple />
         </Box>
       </DialogContent>
       <DialogActions>
@@ -43,4 +40,4 @@ function ApplyForm(props) {
   )
 }
 
-export default ApplyForm;
+export default PictureForm;

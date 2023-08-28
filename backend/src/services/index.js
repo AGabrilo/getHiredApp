@@ -5,6 +5,7 @@ const ApplicationService = require('./application')
 const ConfigurationService = require('./configuration')
 const FavouriteService = require('./favourite')
 const AuthService = require('./auth')
+const NotificationService = require('./notification')
 
 module.exports ={
     UserService,
@@ -13,5 +14,6 @@ module.exports ={
     ApplicationService,
     ConfigurationService,
     FavouriteService,
-    AuthService
+    AuthService,
+    NotificationService
 }

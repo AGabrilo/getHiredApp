@@ -8,11 +8,12 @@ import { Box, Button, CardHeader, TextField, Card, CardActions, CardContent, Typ
 function RegisterForm(props) {
     const { type } = props
     const navigate = useNavigate();
-    const initialValues = type === 'user' ? { firstName: '', lastName: '', password: '', repeatedPassword: '', type: type, email: '' } : { name: '', password: '', passwordRepeated: '', type: type, email: '' }
+    const initialValues = type === 'user' ? { firstName: '', lastName: '', password: '', repeatedPassword: '', type: 'user', email: '' } : { name: '', password: '', passwordRepeated: '', type: 'company', email: '' }
     const formik = useFormik({
         initialValues: initialValues,
         onSubmit: (values) => {
             console.log('Values on submit:', values)
+            values.type = type
             handleRegister(values)
         }
     })

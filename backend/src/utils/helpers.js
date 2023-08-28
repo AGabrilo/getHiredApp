@@ -53,3 +53,7 @@ module.exports.formatDate = (date) => {
         return [time, [hours, minutes].join(':')].join(' ')
     } else return time
 }
+
+module.exports.toStringArray = (value) => {
+    return Array.isArray(value) ? value.map(String) : (String(value) ? [String(value)]: [])
+}

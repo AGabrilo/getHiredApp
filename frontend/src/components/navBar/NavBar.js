@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Typography, AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Container, Avatar, Button, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useNavigate } from "react-router-dom";
+import Badge from '@mui/material/Badge';
+import ClearIcon from '@mui/icons-material/Clear';
 
 function NavBar() {
     const navigate = useNavigate()
     const role = localStorage.getItem('role');
+    const id = localStorage.getItem('id');
     const name = localStorage.getItem('name')
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [anchorElNotification, setAnchorElNotification] = useState(null);
+    const [notifications, setNotifications] = useState([]);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -19,6 +24,10 @@ function NavBar() {
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
+    const handleOpenNotificationMenu = (event) => {
+        setAnchorElNotification(event.currentTarget);
+    };
+
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
@@ -26,6 +35,10 @@ function NavBar() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+
+    const handleCloseNotificationMenu = () => {
+        setAnchorElNotification(null);
     };
 
     const handleLogout = () => {
@@ -37,6 +50,43 @@ function NavBar() {
         navigate('/')
 
     }
+
+    const getNotificationData = () => {
+        fetch(`http://localhost:3001/api/user/notifications/${id}`, {
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setNotifications(data)
+                console.log('notificationss', data)
+            });
+    }
+
+    const handleDeleteNotification = (id) => {
+        console.log('iddd', id)
+        fetch(`http://localhost:3001/api/user/notification/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+            .then((res) => {
+                res.json()
+                getNotificationData()
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+
+    }
+
+    useEffect(() => {
+        getNotificationData()
+    }, [])
 
     return (
         <AppBar position="sticky" sx={{ backgroundColor: '#0d1a30', boxShadow: 'none' }}>
@@ -196,15 +246,53 @@ function NavBar() {
 
                     <Box sx={{ flexGrow: 0 }}>
                         {name ?
-                            <Tooltip title="Open settings" sx={{ w: 30, h: 30 }}>
-                                <IconButton> <NotificationsIcon sx={{ color: 'white' }} /></IconButton>
-                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <>
+                                {role === 'user' ? <>
+                                    <IconButton sx={{ mr: 2 }} onClick={handleOpenNotificationMenu}>
+                                        <Badge badgeContent={notifications.length ? notifications.length : 0} color="primary">
+                                            <NotificationsIcon sx={{ color: 'white' }} />
+                                        </Badge>
+                                    </IconButton>
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        anchorEl={anchorElNotification}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElNotification)}
+                                        onClose={handleCloseNotificationMenu}
+                                    >
+                                        {notifications.length ?
+                                            <>{notifications.map((notification, i) => {
+                                                return <MenuItem key='i' onClick={() => { navigate('myprofile'); handleCloseNotificationMenu() }}>
+                                                    <Typography textAlign="center" sx={{ mr: 2 }}>{notification.message}</Typography> <ClearIcon onClick={() => handleDeleteNotification(notification._id)} />
+                                                </MenuItem>
+                                            })}
+                                            </>
+                                            :
+                                            <MenuItem><Typography textAlign="center">No notifications</Typography></MenuItem>}
+                                    </Menu>
+                                </>
 
-                                    <Typography sx={{ color: 'white' }}>{name}</Typography>
-                                    {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                                </IconButton>
+                                    : null
+                                }
 
-                            </Tooltip>
+                                <Tooltip title="Open settings" sx={{ w: 30, h: 30 }}>
+
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                        {/* <Avatar alt="Remy Sharp" src={`http://localhost:3001/${user.picture}`} /> */}
+                                        <Typography sx={{ color: 'white', fontSize: 19 }}>{name}</Typography>
+
+                                    </IconButton>
+
+                                </Tooltip>
+                            </>
                             :
                             <Button onClick={() => navigate("/login")} sx={{ backgroundColor: '#f2572c', color: '#fafafa' }}> Sign in</Button>
                         }

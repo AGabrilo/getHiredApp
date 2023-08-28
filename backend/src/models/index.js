@@ -9,6 +9,7 @@ const { ExperienceModel } = require('./experience')
 const JobModel = require('./job')
 const UserModel = require('./user')
 const FavouriteModel = require('./favourite')
+const NotificationModel = require('./notification')
 
 module.exports = {
     applicationStatus,
@@ -21,5 +22,6 @@ module.exports = {
     ExperienceModel,
     JobModel,
     UserModel,
-    FavouriteModel
+    FavouriteModel,
+    NotificationModel
 }

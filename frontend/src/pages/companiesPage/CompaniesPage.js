@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
 import { CompanyCard, SearchComponent } from '../../components';
+import NoDataPage from '../noDataPage/NoDataPage';
 
 function CompaniesPage() {
     const [companies, setCompanies] = useState([]);
@@ -86,6 +87,7 @@ function CompaniesPage() {
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
+            {filteredData.length ?
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
                 <SearchComponent setLocation={setLocation} setName={setName} component='Company' />
 
@@ -100,6 +102,9 @@ function CompaniesPage() {
 
                 </Box>
             </Box>
+            : <NoDataPage/>
+        }
+            
         </Box>
 
     )

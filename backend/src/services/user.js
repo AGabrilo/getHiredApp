@@ -25,10 +25,11 @@ module.exports.updateUser = async (userId, userObject) => {
     return await UserModel.findOneAndUpdate(filter, {...userObject}, { new: true });
 }
 
-module.exports.deleteUser = async (userId) => {
+module.exports.deleteUser = async (userId, loggedUser) => {
+    console.log('loggedUser',loggedUser)
     const filter = {
         _id: userId
     }
-
-    return await UserModel.findOneAndDelete(filter);
+    if(loggedUser.role === 'admin' || loggedUser._id === userId) return await UserModel.findOneAndDelete(filter);
+    return null
 }

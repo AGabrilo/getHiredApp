@@ -7,15 +7,16 @@ import ApplyForm from '../applyForm/ApplyForm';
 
 
 function JobCard(props) {
-    const { job, handleApplyButton } = props;
+    const { job, handleApplyButton, fav } = props;
     const shortedSkills = job.skills.length > 3 ? job.skills.slice(0, 3) : job.skills
-    const shortedDescription = job.description.length > 200 ? job.description.slice(0, 200) + '...' : job.description;
+    const shortedDescription = job.description.length > 200 ? fav && job.description.length > 300  ? job.description.slice(0, 300) + '...': job.description.slice(0, 200) + '...' : job.description;
     const navigate = useNavigate();
     const [favourite, setFavourite] = useState([])
     const [company, setCompany] = useState({})
     const [open, setOpen] = useState(false);
     const isCompany = localStorage.getItem('role') === 'company'? true :false;
-
+    const screenSize = window.innerWidth <=900 ? 'small' : 'large'
+    console.log('screenSize', window.innerWidth)
 
     const getData = () => {
         fetch('http://localhost:3001/api/favourite/649e9c19f92c6b347d394b33', {
@@ -99,7 +100,8 @@ function JobCard(props) {
                 width: '100%',
                 overflow: 'auto',
                 resize: 'horizontal',
-                borderRadius: 2.5
+                borderRadius: 2.5,
+                height: screenSize === 'small' ? 515 : 395,
             }}
         >
             <Box
@@ -115,7 +117,7 @@ function JobCard(props) {
                     {dateFormat(job.datePosted, "mmmm dS, yyyy")}
                 </Typography>
             </Box>
-            <CardContent>
+            <CardContent sx= {{height:screenSize === 'small' ? 340 : 230}}>
                 <Typography variant="h5">
                     {job.jobTitle}
                 </Typography>

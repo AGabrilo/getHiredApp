@@ -5,12 +5,12 @@ import { Button, Stack, Typography, IconButton } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import InfoIcon from '@mui/icons-material/Info';
-
+import DownloadIcon from '@mui/icons-material/Download';
+import { saveAs } from 'file-saver'
 
 function ApplicationTable(props) {
   const { applications, users, jobs, getData, setApplications } = props;
   const [rows, setRows] = useState(applications.map((appl, i) => {
-
     return {
       id: i,
       _id: appl._id,
@@ -21,6 +21,7 @@ function ApplicationTable(props) {
       status: appl.status
     }
   }))
+  const role = localStorage.getItem('role')
 
   console.log('rowsss', rows)
 
@@ -32,7 +33,6 @@ function ApplicationTable(props) {
         'Content-type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
-      // body: JSON.stringify({ role: localStorage.getItem('role') })
     })
       .then((res) => {
         res.json()
@@ -56,14 +56,16 @@ function ApplicationTable(props) {
         lastName: users.filter((user) => user._id === appl.userId)[0].lastName,
         jobTitle: jobs.filter((job) => job._id === appl.jobId)[0].jobTitle,
         jobType: jobs.filter((job) => job._id === appl.jobId)[0].jobType,
-        status: appl.status
+        status: appl.status,
+        resume: appl.resume,
+        userId: appl.userId
       }
     }))
   }, [applications])
 
 
-  const handleUpdate = (applicationId, updatedStatus) => {
-    fetch(`http://localhost:3001/api/application/${applicationId}`, {
+  const handleUpdate = (application, updatedStatus) => {
+    fetch(`http://localhost:3001/api/application/${application._id}`, {
       method: 'PUT',
       body: JSON.stringify({ status: updatedStatus }),
       headers: {
@@ -74,6 +76,50 @@ function ApplicationTable(props) {
       .then((res) => res.json())
       .then((data) => {
         setApplications(data)
+        console.log(application, 'iddddddddddd')
+        sendNotification(application.userId, application.jobTitle, application.status)
+        getData()
+
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+  }
+
+  const sendNotification = (userId, jobName, status) => {
+    fetch(`http://localhost:3001/api/user/notification`, {
+      method: 'POST',
+      body: JSON.stringify({ status, userId, jobName }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        getData()
+
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+  }
+
+  const handleDownload = (rowData) => {
+    console.log(rowData, 'resume')
+    fetch(`http://localhost:3001/api/user/download/${rowData._id}`, {
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+    })
+      .then((res) => res.arrayBuffer())
+      .then((data) => {
+        const blob = new Blob([data], { type: 'application/pdf' })
+        saveAs(blob, `Resume_${rowData.firstName}_${rowData.lastName}.pdf`)
+        console.log('done', data)
         getData()
 
       })
@@ -120,7 +166,10 @@ function ApplicationTable(props) {
       headerName: 'Resume',
       flex: 1,
       width: 50,
-      renderCell: (row) => <Button variant='contained' sx={{ backgroundColor: '#f2572c' }}>Download</Button>
+      renderCell: (row) =>
+        <IconButton onClick={() => handleDownload(row.row)}>
+          <DownloadIcon />
+        </IconButton>
     },
     {
       field: "action",
@@ -129,22 +178,20 @@ function ApplicationTable(props) {
       minWidth: 200,
       renderCell: (row) =>
         <Stack direction={'row'} spacing={2}>
-          <IconButton onClick={() => handleUpdate(row.row._id, 'Candidate')}>
-            <DoneOutlineIcon />
-          </IconButton>
-          <IconButton onClick={() => handleUpdate(row.row._id, 'Rejected')}>
-            <ClearIcon />
-          </IconButton>
-          <IconButton onClick={() => handleUpdate(row.row._id, 'Rejected')}>
-            <InfoIcon />
-          </IconButton>
-          {/* <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => handleUpdate(row.row._id, 'Rejected')}>
-            Rejected
-          </Button> */}
-          {/* <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => handleUpdate(row.row._id, 'Candidate')}>
-            Candidate
-          </Button> */}
-          {/* <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => handleDeleteButton(row.row._id)}>Delete</Button> */}
+          {role === 'user' ?
+            <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => handleDeleteButton(row.row._id)}>Delete</Button>
+            : <>
+              <IconButton onClick={() => handleUpdate(row.row, 'Candidate')}>
+                <DoneOutlineIcon />
+              </IconButton>
+              <IconButton onClick={() => handleUpdate(row.row, 'Rejected')}>
+                <ClearIcon />
+              </IconButton>
+              <IconButton onClick={() => handleUpdate(row.row, 'Rejected')}>
+                <InfoIcon />
+              </IconButton>
+            </>}
+
         </Stack>
       ,
     },

@@ -1,8 +1,20 @@
 const { JobModel, CompanyModel } = require("../models")
 
-module.exports.getAllJobs = async () => {
+module.exports.getAllJobs = async (skills, jobTypes, workLocations) => {
     console.log('Get all jobs')
-    return await JobModel.find();
+    const filter = {
+        ...(skills && skills.length && {
+            skills: {$all: skills}
+        }),
+        ...(jobTypes && jobTypes.length && {
+            jobType: {$in: jobTypes}
+        }),
+        ...(workLocations && workLocations.length && {
+            workLocation: {$all: workLocations}
+        }),
+    }
+    
+    return await JobModel.find(filter);
 }
 
 module.exports.getJob = async (jobId) => {

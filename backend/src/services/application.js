@@ -1,7 +1,8 @@
+const mongoose = require('mongoose')
 const { ApplicationModel } = require("../models")
 
 module.exports.getAllUserApplications = async (userId) => {
-    console.log('Get all applications for user')
+    console.log('Get all applications for user', userId)
     const filter = {
         userId: userId
     }
@@ -10,21 +11,20 @@ module.exports.getAllUserApplications = async (userId) => {
 
 module.exports.getAllCompanyApplications = async (companyId) => {
     console.log('Get all applications for company')
-    const filter = {
-        companyId: companyId
-    }
 
     const test = await ApplicationModel.aggregate([
         {
             $lookup: {
-                from: 'job',
-                localField: 'jobId',
-                foreignField: '_id',
+                from: "jobs",
+                localField: "jobId",
+                foreignField: "_id",
                 as: 'jobInfo'
             }
-        }
+        },
+        { $unwind: "$jobInfo" },
+        { $match: { "jobInfo.companyId": new mongoose.Types.ObjectId(companyId) } },
+        { $unset: "jobInfo" }
     ]);
-    console.log(test)
     return test
 }
 

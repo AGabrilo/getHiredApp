@@ -28,6 +28,7 @@ function EducationForm(props) {
     })
 
     const convertToISOString = (stringDate) => {
+        stringDate =stringDate.format('DD-MM-YYYY')
         const [month, day, year] = stringDate.split('-');
         const date = new Date(Date.UTC(year, month - 1, day));
         return date.toISOString();
@@ -91,20 +92,22 @@ function EducationForm(props) {
                     <DatePicker
                         label='Start date'
                         value={formik.values['startDate']}
-                        onChange={(value) => formik.setFieldValue("startDate", value.format("DD-MM-YYYY"))}
+                        onChange={(value) => formik.setFieldValue("startDate", value)}
                         error={Boolean(formik.errors['startDate'])}
                         helperText={formik.errors['startDate']}
                         inputFormat="DD-MM-YYYY"
-                        sx={{ mt: 1, mb: 1 }} />
+                        sx={{ mr:1, mb:1}}
+                        fullWidth />
 
                     <DatePicker
                         label='End date'
                         value={formik.values['endDate']}
-                        onChange={(value) => formik.setFieldValue("endDate", value.format("DD-MM-YYYY"))}
+                        onChange={(value) => formik.setFieldValue("endDate", value)}
                         error={Boolean(formik.errors['endDate'])}
                         helperText={formik.errors['endDate']}
                         inputFormat="DD-MM-YYYY"
-                        sx={{ mb: 1 }} />
+                        sx={{ mb: 1 }}
+                        fullWidth />
                 </Box>
             </DialogContent>
             <DialogActions>

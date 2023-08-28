@@ -6,9 +6,9 @@ const initialState = {
     error: null
 };
 
-export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
+export const fetchUsers = createAsyncThunk('user/fetchUser', async () => {
 
-    const response = await fetch(`http://localhost:3001/api/user/${localStorage.getItem('id')}`, {
+    const response = await fetch(`http://localhost:3001/api/user`, {
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
             'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -20,7 +20,7 @@ export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
 })
 
 
-export const userSlice = createSlice({
+export const usersSlice = createSlice({
     name: 'user',
     initialState,
     //the reducers field lets us to define reducers and generate actions
@@ -30,20 +30,20 @@ export const userSlice = createSlice({
     //extraReducers lets the slice handle actions defined elsewhere
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUser.pending, (state) => {
+            .addCase(fetchUsers.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchUser.rejected, (state) => {
+            .addCase(fetchUsers.rejected, (state) => {
                 console.log('Failed to load User!')
                 state.status = 'failed';
             })
-            .addCase(fetchUser.fulfilled, (state, action) => {
+            .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.status = 'complete';
                 state.data = action.payload;
             })
     }
 })
 
-export const selectUserConf = (state)=> state.user.data;
+export const selectUsersConf = (state)=> state.user.data;
 
-export default userSlice.reducer;
+export default usersSlice.reducer;
