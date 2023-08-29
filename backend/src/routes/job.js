@@ -13,6 +13,12 @@ function init() {
         filterParams,
         JobController.getAllJobs)
 
+        router.get("/expired/:id",
+        Authorization,
+        restrictTo(['user', 'company', 'admin']),
+        filterParams,
+        JobController.getAllExpiredJobsOfCompany)
+
     // delete specific job (company)
     router.delete("/:jobId",
         Authorization,

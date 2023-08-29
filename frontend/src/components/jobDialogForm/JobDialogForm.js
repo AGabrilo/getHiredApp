@@ -4,11 +4,12 @@ import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTit
 import { useSelector } from 'react-redux';
 import { selectJobTypesConf, selectSkillsConf, selectWorkLocationsConf } from '../../redux/configurationSlice';
 import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 function JobDialogForm(props) {
     const { job, open, setOpen, handleSubmit } = props;
     const initialValues = job ? { jobTitle: job.jobTitle, description: job.description, hiringNum: job.hiringNum, location: { city: job.location.city, country: job.location.country }, jobType: job.jobType, skills: job.skills, workLocation: job.workLocation, deadline: job.deadline } 
-    : { jobTitle: '', description: '', hiringNum: '', location: { city: '', country: '' }, jobType: '', skills: [], workLocation: '', deadline: '' }
+    : { jobTitle: '', description: '', hiringNum: '', location: { city: '', country: '' }, jobType: '', skills: [], workLocation: '', deadline: dayjs('2022-04-17') }
     const jobTypes = useSelector(selectJobTypesConf)
     const skills = useSelector(selectSkillsConf)
     const workLocations = useSelector(selectWorkLocationsConf)
@@ -17,9 +18,18 @@ function JobDialogForm(props) {
         initialValues: initialValues,
         onSubmit: (values) => {
             console.log('Values on submit:', values)
-            handleSubmit(job._id, values)
+            values.deadline = convertToISOString(values.deadline)
+            handleSubmit(values)
         }
     })
+
+    const convertToISOString = (stringDate) => {
+        const test = stringDate.format('DD-MM-YYYY')
+        const [month, day, year] = test.split('-');
+        const date = new Date(Date.UTC(year, month - 1, day));
+        console.log(date.toISOString())
+        return date.toISOString();
+    }
 
     return (
         <Dialog
@@ -144,7 +154,7 @@ function JobDialogForm(props) {
                         )}
                         sx={{ mb: 2 }}
                     />
-                    <DatePicker label="Expiring date" />
+                    <DatePicker label="Expiring date" fullWidth />
                     
                 </Box>
             </DialogContent>

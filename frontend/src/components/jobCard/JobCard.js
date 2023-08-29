@@ -16,7 +16,7 @@ function JobCard(props) {
     const [open, setOpen] = useState(false);
     const isCompany = localStorage.getItem('role') === 'company'? true :false;
     const screenSize = window.innerWidth <=900 ? 'small' : 'large'
-    console.log('screenSize', window.innerWidth)
+    const id = localStorage.getItem('id')
 
     const getData = () => {
         fetch('http://localhost:3001/api/favourite/649e9c19f92c6b347d394b33', {
@@ -144,7 +144,7 @@ function JobCard(props) {
                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { navigate(`/jobs/${job._id}`) }}>
                     View
                 </Button>
-                {isCompany ? 
+                {isCompany && id === job.companyId? 
                 <>
                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
                         Modify
@@ -152,14 +152,17 @@ function JobCard(props) {
                     <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
                         Delete
                     </Button>
-                </> :
-                <>
-                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
-                        Apply
-                    </Button>
-                    <ApplyForm open={open} setOpen={setOpen} id={job._id} handleApplyButton={handleApplyButton}/>
-                </>
-                   }
+                </> : null }
+                
+              {!isCompany ?
+              <>
+              <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
+                     Apply
+                 </Button>
+                 <ApplyForm open={open} setOpen={setOpen} id={job._id} handleApplyButton={handleApplyButton}/>
+             </>
+             : null}
+               
                     
             </CardActions>
         </Card>

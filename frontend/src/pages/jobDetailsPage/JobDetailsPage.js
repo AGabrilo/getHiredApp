@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { DeleteJobButton, TopCompanies } from '../../components';
 import { palette } from '../../utils/palette'
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import dateFormat from 'dateformat';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
@@ -13,8 +14,9 @@ import UpdateJobButton from '../../components/updateJobButton/UpdateJobButton';
 
 function JobDetailsPage() {
     let { jobId } = useParams();
-    const isCompany = true
+    const isCompany = localStorage.getItem('role') ==='company' ? true : false
     const [job, setJob] = useState();
+    const [company, setCompany] = useState({})
     const [favourite, setFavourite] = useState([])
     const getFavourites = () => {
         fetch('http://localhost:3001/api/favourite/649e9c19f92c6b347d394b33', {
@@ -45,7 +47,6 @@ function JobDetailsPage() {
                     'Content-type': 'application/json; charset=UTF-8',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
-                // body: JSON.stringify({ role: localStorage.getItem('role') })
             })
                 .then((res) => {
                     res.json()
@@ -89,7 +90,20 @@ function JobDetailsPage() {
             .then((response) => response.json())
             .then((data) => {
                 setJob(data)
+            })
+            .then(()=>{
+                fetch(`http://localhost:3001/api/company/${job.companyId}`, {
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setCompany(data)
+                    });
             });
+        
     }
 
     useEffect(() => {
@@ -126,19 +140,23 @@ function JobDetailsPage() {
                                                     {job.jobTitle}
                                                 </Typography>
                                                 <Typography variant='h6'>
-                                                    {job.companyId}
+                                                    {company.name}
                                                 </Typography>
                                                 <Typography>
                                                     {job.location.city}, {job.location.country}
                                                 </Typography>
                                             </Box>
                                         </Stack>
+                                        {!isCompany ?
                                         <Box>
                                             <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize: 20 }}>Apply</Button>
                                             <IconButton variant="outlined" color={checkIfFavourite(job._id) ? "error" : "neutral"} sx={{ mr: 'auto' }} onClick={() => handleFavouriteButton(job._id)} sx={{ flexGrow: 0 }}>
                                                 <FavoriteIcon />
                                             </IconButton>
                                         </Box>
+                                        : null
+                                        }
+                                        
 
                                     </Box>
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
@@ -158,7 +176,7 @@ function JobDetailsPage() {
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
                                         <CalendarMonthOutlinedIcon />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>POSTED: </Typography>
-                                        <Typography variant='h5' sx={{ color: '#303030' }}>{job.datePosted}</Typography>
+                                        <Typography variant='h5' sx={{ color: '#303030' }}> {dateFormat(job.datePosted, "mmmm dS, yyyy")}</Typography>
                                     </Stack>
                                     <Divider />
 
@@ -173,7 +191,7 @@ function JobDetailsPage() {
                                         <ChecklistOutlinedIcon />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>SKILLS: </Typography>
                                         {job.skills.length ? job.skills.map((skill, i) => {
-                                            return <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: palette[i] }} key={i} />
+                                            return <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: '#ccccff' }}  key={i} />
                                         }) : null}
                                     </Stack>
                                     <Divider />
@@ -187,7 +205,7 @@ function JobDetailsPage() {
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
                                         <CalendarMonthOutlinedIcon />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>DEADLINE: </Typography>
-                                        <Typography variant='h5' sx={{ color: '#303030' }}>{job.deadline}</Typography>
+                                        <Typography variant='h5' sx={{ color: '#303030' }}> {dateFormat(job.deadline, "mmmm dS, yyyy")}</Typography>
                                     </Stack>
                                     <Divider />
 
@@ -207,7 +225,7 @@ function JobDetailsPage() {
                     <Grid container item xs={12} md={2} lg={2} sx={{ height: 'fit-content' }}>
                         <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
                             <Paper sx={{ p: 3, minWidth: 150 }}>
-                                <Typography variant='h5' >Other jobs</Typography>
+                                <Typography variant='h5' >Other companies</Typography>
                             </Paper>
                             <TopCompanies />
                         </Stack>

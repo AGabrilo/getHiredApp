@@ -4,16 +4,29 @@ module.exports.getAllJobs = async (skills, jobTypes, workLocations) => {
     console.log('Get all jobs')
     const filter = {
         ...(skills && skills.length && {
-            skills: {$all: skills}
+            skills: { $all: skills }
         }),
         ...(jobTypes && jobTypes.length && {
-            jobType: {$in: jobTypes}
+            jobType: { $in: jobTypes }
         }),
         ...(workLocations && workLocations.length && {
-            workLocation: {$all: workLocations}
+            workLocation: { $all: workLocations }
         }),
     }
-    
+
+    return await JobModel.find(filter);
+}
+
+module.exports.getAllExpiredJobsOfCompany = async (id) => {
+    console.log('Get all expired jobs', Date.now())
+
+    const filter = {
+        companyId: id,
+        deadline: {
+            $lte: Date.now(),
+          }
+    }
+
     return await JobModel.find(filter);
 }
 
@@ -46,5 +59,5 @@ module.exports.updateJob = async (jobId, jobObject) => {
     const filter = {
         _id: jobId
     }
-    return await JobModel.findOneAndUpdate(filter, {...jobObject}, { new: true });
+    return await JobModel.findOneAndUpdate(filter, { ...jobObject }, { new: true });
 }

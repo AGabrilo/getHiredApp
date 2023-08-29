@@ -89,7 +89,7 @@ function NavBar() {
     }, [])
 
     return (
-        <AppBar position="sticky" sx={{ backgroundColor: '#0d1a30', boxShadow: 'none' }}>
+        <AppBar position="sticky" sx={{ backgroundColor: '#0d1a30', boxShadow: 'none', width:'100%' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

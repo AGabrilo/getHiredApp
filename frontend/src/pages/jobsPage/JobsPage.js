@@ -86,10 +86,6 @@ function JobsPage() {
     }, [filteredJobType, filteredSkills, filteredWorkLocation])
 
     const handleApplyButton = (formData) => {
-        console.log('form entriess', formData.entries())
-        for (var [key, value] of formData.entries()) {
-            console.log(key, "----", value);
-        }
         fetch(`http://localhost:3001/api/application`, {
             method: 'POST',
             body: formData

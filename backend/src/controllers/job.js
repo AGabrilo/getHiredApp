@@ -11,6 +11,15 @@ module.exports.getAllJobs = catchAsync(async (req, res, next) => {
     else return next(new AppError('Jobs not found', 404))
 })
 
+module.exports.getAllExpiredJobsOfCompany= catchAsync(async (req, res, next) => {
+    const {id} = req.params
+    const result = await JobService.getAllExpiredJobsOfCompany(id);
+    if (result) {
+        res.status(200).json(result);
+    }
+    else return next(new AppError('Expired jobs not found', 404))
+})
+
 module.exports.getJob = catchAsync(async (req, res, next) => {
     const { jobId } = req.params;
     const result = await JobService.getJob(jobId);
@@ -22,6 +31,7 @@ module.exports.getJob = catchAsync(async (req, res, next) => {
 
 module.exports.createJob = catchAsync(async (req, res, next) => {
     const jobObject = req.body
+    console.log('create job', jobObject)
     const result = await JobService.createJob(jobObject);
     if (result) {
         res.status(200).json(result);
