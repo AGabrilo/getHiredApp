@@ -15,7 +15,6 @@ function MyJobsPage() {
     const noDataWidth = window.innerWidth - 300
 
     const handleAddJob = (jobObject) => {
-        console.log('jobObject', jobObject)
         fetch(`http://localhost:3001/api/job`, {
             method: 'POST',
             body: JSON.stringify({...jobObject, companyId: id}),
@@ -32,7 +31,39 @@ function MyJobsPage() {
             .catch((err) => {
               console.log(err.message);
             });
-      
+    }
+
+    const handleModifyButton = (jobObject) => {
+        console.log('handleModifyButton',jobObject)
+        fetch(`http://localhost:3001/api/job/${jobObject._id}`, {
+            method: 'PUT',
+            body: JSON.stringify(jobObject),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+              },
+        })
+            .then((res) => { res.json(); getData() })
+            .catch((err) => {
+                console.log(err.message);
+            });
+
+    }
+
+    const handleDeleteButton = (jobId) => {
+        console.log('handleDeleteButton',jobId)
+        fetch(`http://localhost:3001/api/job/${jobId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+              },
+        })
+            .then((res) => { res.json(); getData() })
+            .catch((err) => {
+                console.log(err.message);
+            });
+
     }
 
     const getData = () => {
@@ -90,15 +121,15 @@ function MyJobsPage() {
                     spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '90%', mb: 3 }}>
                     <SearchComponent setLocation={setLocation} setName={setName} component='Job' />
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                        <Button variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa', height: 50 }} onClick={() => setOpen(true)}>Add new job</Button>
-                        <Button variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa', height: 50 }} onClick={()=>getExpiredData(id)}>Show expired jobs</Button>
+                        <Button variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa', height: 55 }} onClick={() => setOpen(true)}>Add new job</Button>
+                        <Button variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa', height: 55 }} onClick={()=>getExpiredData(id)}>Expired jobs</Button>
                     </Box>
                 </Stack>
                 <Grid container spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%' }}>
                     {filteredData.length ?
                         filteredData.map((job, i) => {
                             return <Grid container item sm={12} md={6} lg={6} xl={4} key={i}>
-                                <JobCard job={job} handleApplyButton />
+                                <JobCard job={job} handleApplyButton handleModifyButton={handleModifyButton} handleDeleteButton={handleDeleteButton}/>
                             </Grid>
                         })
                         : <Grid item sm={12} md={12} lg={12} xl={12} key={'No data'} sx={{ width: noDataWidth, }}>

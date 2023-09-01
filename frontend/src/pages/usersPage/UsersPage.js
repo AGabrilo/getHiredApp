@@ -16,7 +16,7 @@ function UsersPage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                setRows(data.map((el, i) => {
+                setRows(data.filter((d)=>d.role!=='admin').map((el, i) => {
                     return {
                         id: i,
                         _id: el._id,
@@ -24,6 +24,7 @@ function UsersPage() {
                         username: el.username,
                         email: el.email,
                         lastName: el.lastName,
+                        picture:el.picture
                     }
                 }))
             });
@@ -36,8 +37,8 @@ function UsersPage() {
     return (
         <Box sx={{ backgroundColor: '#e9e8eb', height: '100vh' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', py: 8, mx: 4, backgroundColor: '#e9e8eb' }}>
-                <Typography variant='h4' sx={{ mb: 4 }}>Users</Typography>
-                {rows.length ? <UserTable rows={rows} getData={getData} type='user' /> : null}
+                <Typography variant='h4' sx={{ mb: 4 }}>Students</Typography>
+                {rows.length ? <UserTable rows={rows} getData={getData} type='users' /> : null}
 
             </Box>
         </Box>

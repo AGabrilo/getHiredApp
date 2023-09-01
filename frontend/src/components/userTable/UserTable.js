@@ -1,40 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Stack, Typography } from '@mui/material';
+import { Avatar, Button, Stack, Typography } from '@mui/material';
 import DeleteDialog from '../deleteDialog/DeleteDialog';
-import UserDialogForm from '../userDialogForm/UserDialogForm';
-
-
+import { useNavigate } from "react-router-dom";
+import UserForm from '../userForm/UserForm';
+import CompanyDialogForm from '../companyDialogForm/CompanyDialogForm';
 
 function UserTable(props) {
     const { rows, getData, type } = props;
     const [open, setOpen] = useState(false)
-    const [openForm, setOpenForm] = useState(false);
+    const [openUpdateForm, setOpenUpdateForm] = useState(false);
     const [user, setUser] = useState()
     const [company, setCompany] = useState()
+    const navigate = useNavigate();
 
     const handleDeleteButton = (id) => {
-        fetch(`http://localhost:3001/api/user/${id}`, {
+        fetch(`http://localhost:3001/api/${type === 'users' ? 'user' : 'company'}/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
-        })
-            .then((res) => {
-                res.json()
-                getData()
-            })
+        }).then(() => getData())
             .catch((err) => {
                 console.log(err.message);
             });
-
     }
 
     const handleUpdate = (userId, updatedUserObject) => {
-
-        fetch(`http://localhost:3001/api/user/${userId}`, {
+        fetch(`http://localhost:3001/api/${type === 'users' ? 'user' : 'company'}/${userId}`, {
             method: 'PUT',
             body: JSON.stringify(updatedUserObject),
             headers: {
@@ -42,18 +37,18 @@ function UserTable(props) {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
-            .then((res) => res.json())
-            .then((data) => {
-                getData()
-            })
+            .then(() => getData())
             .catch((err) => {
                 console.log(err.message);
             });
-
     }
 
-    const columns = type === 'user' ? [
-        { field: 'id', headerName: 'ID', flex: 1, minWidth: 60 },
+    const columns = type === 'users' ? [
+        {
+            field: 'picture', headerName: '', flex: 1, minWidth: 70,
+            renderCell: (row) =>
+                <Avatar sx={{ ml: 2 }} src={row.row.picture ? `http://localhost:3001${row.row.picture}` : ''} />
+        },
         {
             field: 'firstName',
             headerName: 'First name',
@@ -79,17 +74,21 @@ function UserTable(props) {
             minWidth: 230,
             renderCell: (row) =>
                 <Stack direction={'row'} spacing={2}>
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpenForm(true) }}>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpenUpdateForm(true) }}>
                         Update {console.log('row', row)}
                     </Button>
                     <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpen(true) }}>Delete</Button>
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpen(true) }}>View</Button>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => navigate(`/${type}/${row.row._id}`)}>View</Button>
                 </Stack>
             ,
         },
     ]
         : [
-            { field: 'id', headerName: 'ID', flex: 1, minWidth: 60 },
+            {
+                field: 'picture', headerName: '', flex: 1, minWidth: 70,
+                renderCell: (row) =>
+                    <Avatar sx={{ ml: 2 }} src={row.row.picture ? `http://localhost:3001${row.row.picture}` : ''} />
+            },
             {
                 field: 'name',
                 headerName: 'Company name',
@@ -115,20 +114,18 @@ function UserTable(props) {
                 minWidth: 230,
                 renderCell: (row) =>
                     <Stack direction={'row'} spacing={2}>
-                        <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpenForm(true) }}>
+                        <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpenUpdateForm(true) }}>
                             Update {console.log('row', row)}
                         </Button>
                         <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpen(true) }}>Delete</Button>
-                        <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpen(true) }}>View</Button>
+                        <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => navigate(`/${type}/${row.row._id}`)}>View</Button>
                     </Stack>
-                ,
             },
         ];
 
-
     return (
         <Box sx={{ height: 'fit-content', p: 8, backgroundColor: 'white', display: 'flex', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
-            <Typography variant='h5' sx={{ mb: 3 }}>Users table</Typography>
+            <Typography variant='h5' sx={{ mb: 3 }}>Table</Typography>
             <DataGrid
                 rows={rows}
                 columns={columns}
@@ -139,8 +136,10 @@ function UserTable(props) {
 
             {user ? <>
                 <DeleteDialog open={open} setOpen={setOpen} id={user._id} handleDeleteButton={handleDeleteButton} component='user' />
-                <UserDialogForm open={openForm} setOpen={setOpenForm} user={user} handleUpdate={handleUpdate} />
-            </> : null}
+                <UserForm open={openUpdateForm} setOpen={setOpenUpdateForm} user={user} handleUpdate={handleUpdate} />
+            </> : company ? <>
+                <DeleteDialog open={open} setOpen={setOpen} id={company._id} handleDeleteButton={handleDeleteButton} component='company' />
+                <CompanyDialogForm open={openUpdateForm} setOpen={setOpenUpdateForm} company={company} handleUpdate={handleUpdate} /></> : null}
         </Box>
     );
 }

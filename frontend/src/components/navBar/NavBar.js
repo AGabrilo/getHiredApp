@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
-import { Typography, AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Container, Avatar, Button, Tooltip } from '@mui/material';
+import { Typography, AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Container, Button, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -27,7 +27,6 @@ function NavBar() {
     const handleOpenNotificationMenu = (event) => {
         setAnchorElNotification(event.currentTarget);
     };
-
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
@@ -61,12 +60,10 @@ function NavBar() {
             .then((response) => response.json())
             .then((data) => {
                 setNotifications(data)
-                console.log('notificationss', data)
             });
     }
 
     const handleDeleteNotification = (id) => {
-        console.log('iddd', id)
         fetch(`http://localhost:3001/api/user/notification/${id}`, {
             method: 'DELETE',
             headers: {
@@ -89,7 +86,7 @@ function NavBar() {
     }, [])
 
     return (
-        <AppBar position="sticky" sx={{ backgroundColor: '#0d1a30', boxShadow: 'none', width:'100%' }}>
+        <AppBar position="sticky" sx={{ backgroundColor: '#0d1a30', boxShadow: 'none', width: '100%' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -144,14 +141,14 @@ function NavBar() {
                                 <Link to='/companies'> <Typography textAlign="center">Companies</Typography> </Link>
                             </MenuItem>
                             {role === 'user' ?
-                                <>
+                                <Box >
                                     <MenuItem key='myapplications' onClick={handleCloseNavMenu}>
                                         <Link to='/myapplications'><Typography textAlign="center">My applications</Typography></Link>
                                     </MenuItem>
                                     <MenuItem key='favourites' onClick={handleCloseNavMenu}>
                                         <Link to='/favourites'><Typography textAlign="center">Favourites</Typography></Link>
                                     </MenuItem>
-                                </>
+                                </Box>
                                 : null
                             }
                         </Menu>
@@ -177,7 +174,7 @@ function NavBar() {
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {role === 'user' || role === 'company' ?
-                            <>
+                            <Box sx={{ display: 'inline-flex' }}>
                                 <Link to='/jobs'>
                                     <Button
                                         key='jobs2'
@@ -202,7 +199,7 @@ function NavBar() {
                                 >
                                     My Applications
                                 </Button></Link>
-                            </>
+                            </Box>
                             : null}
 
                         {role === 'user' ?
@@ -225,9 +222,9 @@ function NavBar() {
                             </Button></Link>
                             : null}
                         {role === 'admin' ?
-                            <>
-                                <Link to='/students'><Button
-                                    key='students'
+                            <Box sx={{ display: 'inline-flex' }}>
+                                <Link to='/studentsTable'><Button
+                                    key='studentsTable'
                                     onClick={handleCloseNavMenu}
                                     sx={{ my: 2, color: '#fafafa', display: 'block', fontSize: '22px' }}
                                 >
@@ -240,7 +237,7 @@ function NavBar() {
                                 >
                                     Companies
                                 </Button></Link>
-                            </>
+                            </Box>
                             : null}
                     </Box>
 
@@ -269,12 +266,11 @@ function NavBar() {
                                         onClose={handleCloseNotificationMenu}
                                     >
                                         {notifications.length ?
-                                            <>{notifications.map((notification, i) => {
+                                            notifications.map((notification, i) => {
                                                 return <MenuItem key='i' onClick={() => { navigate('myprofile'); handleCloseNotificationMenu() }}>
                                                     <Typography textAlign="center" sx={{ mr: 2 }}>{notification.message}</Typography> <ClearIcon onClick={() => handleDeleteNotification(notification._id)} />
                                                 </MenuItem>
-                                            })}
-                                            </>
+                                            })
                                             :
                                             <MenuItem><Typography textAlign="center">No notifications</Typography></MenuItem>}
                                     </Menu>

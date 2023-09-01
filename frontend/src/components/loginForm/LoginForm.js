@@ -27,9 +27,12 @@ function LoginForm() {
                     localStorage.setItem("token", data.token);
                     localStorage.setItem("role", data.data.user.role);
                     localStorage.setItem("id", data.data.user._id);
+
                     if (data.data.user.firstName) localStorage.setItem("name", data.data.user.firstName);
                     else localStorage.setItem("name", data.data.user.name);
-                    navigate("/jobs")
+
+                    if (data.data.user.role === 'admin') navigate('/studentsTable')
+                    else navigate("/jobs")
 
                 } else {
                     console.log("Authentication error");

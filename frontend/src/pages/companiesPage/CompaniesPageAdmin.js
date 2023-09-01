@@ -6,6 +6,7 @@ import { UserTable } from '../../components';
 
 function CompaniesPageAdmin() {
     const [rows, setRows] = useState([])
+    console.log('helooou from companiesPageadmin', rows)
 
     const getData = () => {
         fetch('http://localhost:3001/api/company', {
@@ -16,6 +17,7 @@ function CompaniesPageAdmin() {
         })
             .then((response) => response.json())
             .then((data) => {
+                console.log(data)
                 setRows(data.map((el, i) => {
                     return {
                         id: i,
@@ -23,6 +25,7 @@ function CompaniesPageAdmin() {
                         name: el.name,
                         employersNum: el.employersNum,
                         email: el.email,
+                        picture:el.picture
                     }
                 }))
             });
@@ -36,7 +39,7 @@ function CompaniesPageAdmin() {
         <Box sx={{ backgroundColor: '#e9e8eb', height: '100vh' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', py: 8, mx: 4, backgroundColor: '#e9e8eb' }}>
                 <Typography variant='h4' sx={{ mb: 4 }}>Companies</Typography>
-                {rows.length ? <UserTable rows={rows} getData={getData} type='company' /> : null}
+                {rows.length ? <UserTable rows={rows} getData={getData} type='companies' /> : null}
 
             </Box>
         </Box>

@@ -12,19 +12,19 @@ function init() {
     // get all companies (all)
     router.get("/",
         Authorization,
-        restrictTo(['user', 'company']),
+        restrictTo(['user', 'company', 'admin']),
         CompanyController.getAllCompanies)
 
     // delete specific company (admin)
     router.delete("/:companyId",
         Authorization,
-        restrictTo(['admin', 'company'], 'companyId'),
+        restrictTo(['admin', 'company']),
         CompanyController.deleteCompany)
 
     // update specific company (admin/company)
     router.put("/:companyId",
         Authorization,
-        restrictTo(['admin', 'company'], 'companyId'),
+        restrictTo(['admin', 'company']),
         multer.single('picture'),
         CompanyController.updateCompany)
 

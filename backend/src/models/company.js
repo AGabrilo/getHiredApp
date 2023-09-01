@@ -78,6 +78,7 @@ CompanySchema.pre('save', async function (next) {
 })
 
 CompanySchema.methods.checkPassword = async function (inputPassw, userPassw) {
+    console.log('hereee')
     return await bcrypt.compare(inputPassw, userPassw)
 }
 

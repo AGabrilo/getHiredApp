@@ -32,9 +32,8 @@ function JobsPage() {
                 setFilteredData(data)
             });
     }
-    console.log(allJobs)
+
     const getSearchedData = () => {
-        console.log(location, name)
         if (!name && !location) {
             setFilteredData(allJobs);
         } else if (name && !location) {
@@ -75,7 +74,7 @@ function JobsPage() {
 
     useEffect(() => {
         getData()
-    }, [])
+    }, [getData])
 
     useEffect(() => {
         getSearchedData()
@@ -117,7 +116,6 @@ function JobsPage() {
 
                             </Grid>
                         }
-
                     </Grid>
 
                     <Grid container item xs={12} md={2} lg={2} sx={{ height: 'fit-content', flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
@@ -131,7 +129,6 @@ function JobsPage() {
                 </Box>
             </Box>
         </Box>
-
     )
 }
 

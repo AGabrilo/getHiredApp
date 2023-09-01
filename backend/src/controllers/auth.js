@@ -34,6 +34,8 @@ module.exports.createUser = catchAsync(async (req, res, next) => {
 module.exports.loginUser = catchAsync(async (req, res, next) => {
     const { email, password, type } = req.body
 
+    console.log('login userr', req.body)
+
     if (!email || !password) {
         return next(new AppError('You need to provide email and password!', 400))
     }
@@ -43,6 +45,8 @@ module.exports.loginUser = catchAsync(async (req, res, next) => {
     }
 
     const user = await AuthService.loginUser(email, type)
+
+    console.log('user', user)
 
     if (!user || !(await user.checkPassword(password, user.password))) {
         return next(new AppError('Incorrect email or password!', 401))

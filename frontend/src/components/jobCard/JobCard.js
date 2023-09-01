@@ -4,16 +4,19 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import dateFormat from 'dateformat';
 import { useNavigate } from 'react-router-dom';
 import ApplyForm from '../applyForm/ApplyForm';
+import JobDialogForm from '../jobDialogForm/JobDialogForm';
+import DeleteDialog from '../deleteDialog/DeleteDialog';
 
 
 function JobCard(props) {
-    const { job, handleApplyButton, fav } = props;
+    const { job, handleApplyButton, fav, handleModifyButton, handleDeleteButton } = props;
     const shortedSkills = job.skills.length > 3 ? job.skills.slice(0, 3) : job.skills
     const shortedDescription = job.description.length > 200 ? fav && job.description.length > 300  ? job.description.slice(0, 300) + '...': job.description.slice(0, 200) + '...' : job.description;
     const navigate = useNavigate();
     const [favourite, setFavourite] = useState([])
     const [company, setCompany] = useState({})
     const [open, setOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const isCompany = localStorage.getItem('role') === 'company'? true :false;
     const screenSize = window.innerWidth <=900 ? 'small' : 'large'
     const id = localStorage.getItem('id')
@@ -45,7 +48,7 @@ function JobCard(props) {
     }
 
     const checkIfFavourite = (jobId) => {
-        let check = favourite.filter((el) => el.jobId === jobId)
+        let check = favourite && favourite.filter((el) => el.jobId === jobId && el.userId === id)
         console.log(check)
         if (check.length) return check
         else return false
@@ -112,7 +115,7 @@ function JobCard(props) {
                     p: 2
                 }}
             >
-                <Avatar src="../../../public/logo192.png" sx={{ width: 56, height: 56 }} />
+                <Avatar  src={`http://localhost:3001${company.picture}`} sx={{ width: 56, height: 56 }} />
                 <Typography variant="h6">
                     {dateFormat(job.datePosted, "mmmm dS, yyyy")}
                 </Typography>
@@ -149,9 +152,11 @@ function JobCard(props) {
                 <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
                         Modify
                     </Button>
-                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpen(true)}>
+                    <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={()=>setOpenDelete(true)}>
                         Delete
                     </Button>
+                    <JobDialogForm open={open} setOpen={setOpen} job={job} handleSubmit={handleModifyButton} />
+                    <DeleteDialog open={openDelete} setOpen={setOpenDelete} id={job._id} handleDeleteButton={handleDeleteButton} component='job' />
                 </> : null }
                 
               {!isCompany ?
@@ -162,8 +167,6 @@ function JobCard(props) {
                  <ApplyForm open={open} setOpen={setOpen} id={job._id} handleApplyButton={handleApplyButton}/>
              </>
              : null}
-               
-                    
             </CardActions>
         </Card>
 

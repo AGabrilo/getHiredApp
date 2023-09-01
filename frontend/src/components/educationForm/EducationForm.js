@@ -1,8 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTitle, Autocomplete, Typography } from '@mui/material';
+import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
 
 function EducationForm(props) {
     const { user, open, setOpen, handleUpdate } = props;
@@ -10,8 +9,8 @@ function EducationForm(props) {
         degreeType: '',
         degreeName: '',
         schoolName: '',
-        startDate: dayjs('2022-04-17'),
-        endDate: dayjs('2022-04-17')
+        startDate: '',
+        endDate: ''
     }
 
     const formik = useFormik({
@@ -20,7 +19,6 @@ function EducationForm(props) {
             console.log('Values on submit:', values)
             values.startDate = convertToISOString(values.startDate)
             values.endDate = convertToISOString(values.endDate)
-            console.log('tessssst', values.startDate)
             let newArray = user.education
             newArray.push(values)
             handleUpdate(user._id, { education: newArray })
@@ -28,7 +26,7 @@ function EducationForm(props) {
     })
 
     const convertToISOString = (stringDate) => {
-        stringDate =stringDate.format('DD-MM-YYYY')
+        stringDate = stringDate.format('DD-MM-YYYY')
         const [month, day, year] = stringDate.split('-');
         const date = new Date(Date.UTC(year, month - 1, day));
         return date.toISOString();
@@ -91,17 +89,15 @@ function EducationForm(props) {
                     />
                     <DatePicker
                         label='Start date'
-                        value={formik.values['startDate']}
                         onChange={(value) => formik.setFieldValue("startDate", value)}
                         error={Boolean(formik.errors['startDate'])}
                         helperText={formik.errors['startDate']}
                         inputFormat="DD-MM-YYYY"
-                        sx={{ mr:1, mb:1}}
+                        sx={{ mr: 1, mb: 1 }}
                         fullWidth />
 
                     <DatePicker
                         label='End date'
-                        value={formik.values['endDate']}
                         onChange={(value) => formik.setFieldValue("endDate", value)}
                         error={Boolean(formik.errors['endDate'])}
                         helperText={formik.errors['endDate']}

@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 module.exports.toCompanyObject = (req) => {
   return {
     ...req.body._id && { _id: mongoose.Types.ObjectId(req.body._id) },
-    name: req.body.name,
+    ...req.body.name && { name: req.body.name },
     ...req.body.employersNum && { employersNum: req.body.employersNum },
     ...req.body.description && { description: req.body.description },
     ...req.file && { picture: '/img/company/' + req.file.filename },

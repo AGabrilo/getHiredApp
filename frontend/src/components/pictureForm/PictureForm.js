@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTitle, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, DialogActions, DialogTitle, Typography } from '@mui/material';
 
 function PictureForm(props) {
   const { open, setOpen, id, handleApplyButton } = props;
@@ -9,12 +9,9 @@ function PictureForm(props) {
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: () => {
-    //   const formData = new FormData();
-    //   formData.append("picture", fileList[0])
-      handleApplyButton(id,{picture:fileList[0] })
+      handleApplyButton(id, { picture: fileList[0] })
     }
   })
-  console.log(fileList)
 
   return (
     <Dialog

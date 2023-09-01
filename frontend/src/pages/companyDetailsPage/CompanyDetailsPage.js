@@ -16,7 +16,6 @@ function CompanyDetailsPage() {
     const isCompany = true
     const [company, setCompany] = useState();
     const allJobs = useSelector(selectJobsConf).filter((el)=>el.companyId ===companyId )
-    console.log('alljobs',allJobs)
 
     const getData = ()=>{
         fetch(`http://localhost:3001/api/company/${companyId}`, {
@@ -56,9 +55,9 @@ function CompanyDetailsPage() {
                                     <Stack direction={{ md: 'row', xs: 'column' }}
                                         spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '100%', alignItems: 'center' }} >
                                         <img
-                                            src={require("../../components/companyCard/company.jpeg")}
+                                           src={`http://localhost:3001${company.picture}`}
                                             alt=""
-                                            width={'50%'}
+                                            width={200}
                                         />
                                         <Box>
                                             <Typography variant='h4' sx={{ fontWeight: 700 }}>

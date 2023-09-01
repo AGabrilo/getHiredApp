@@ -1,4 +1,4 @@
-const { CompanyModel } = require("../models")
+const { CompanyModel, JobModel } = require("../models")
 
 module.exports.getAllCompanies = async () => {
     console.log('Get all companies')
@@ -24,16 +24,18 @@ module.exports.updateCompany = async (companyId, companyObject) => {
     return await CompanyModel.findOneAndUpdate(filter, updatedCompany, { new: true });
 }
 
-module.exports.deleteCompany = async (companyId) => {
+module.exports.deleteCompany = async (loggedUser, companyId) => {
     const filter = {
         _id: companyId
     }
-    return await CompanyModel.findOneAndDelete(filter);
+    if (loggedUser.role === 'admin' || loggedUser._id.toString() === companyId) {
+        let jobs = await JobModel.deleteMany({ companyId })
+        return await CompanyModel.findOneAndDelete(filter);
+    }
+    else return null
 }
 
-module.exports.createCompany = async ( companyObject) => {
-
-
+module.exports.createCompany = async (companyObject) => {
     let newCompany = {
         ...companyObject
     }

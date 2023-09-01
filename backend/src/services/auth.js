@@ -10,6 +10,7 @@ module.exports.createUser = async (userObject, type) => {
 }
 
 module.exports.loginUser = async (email, type) => {
+    console.log('type', type)
     if (type === 'user') return await UserModel.findOne({ email }).select('+password')
     else if (type === 'company') return await CompanyModel.findOne({ email }).select('+password')
     else return null

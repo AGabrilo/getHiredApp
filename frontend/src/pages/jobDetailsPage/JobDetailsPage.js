@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, CardContent, Card, Typography, Stack, Grid, Paper, IconButton, Divider, Chip } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { DeleteJobButton, TopCompanies } from '../../components';
-import { palette } from '../../utils/palette'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import dateFormat from 'dateformat';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
@@ -14,7 +13,7 @@ import UpdateJobButton from '../../components/updateJobButton/UpdateJobButton';
 
 function JobDetailsPage() {
     let { jobId } = useParams();
-    const isCompany = localStorage.getItem('role') ==='company' ? true : false
+    const isCompany = localStorage.getItem('role') === 'company' ? true : false
     const [job, setJob] = useState();
     const [company, setCompany] = useState({})
     const [favourite, setFavourite] = useState([])
@@ -91,7 +90,7 @@ function JobDetailsPage() {
             .then((data) => {
                 setJob(data)
             })
-            .then(()=>{
+            .then(() => {
                 fetch(`http://localhost:3001/api/company/${job.companyId}`, {
                     headers: {
                         'Content-type': 'application/json; charset=UTF-8',
@@ -103,7 +102,6 @@ function JobDetailsPage() {
                         setCompany(data)
                     });
             });
-        
     }
 
     useEffect(() => {
@@ -132,8 +130,9 @@ function JobDetailsPage() {
                                         <Stack direction={{ md: 'row', xs: 'column' }}
                                             spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ alignItems: 'center', mb: 2 }} >
                                             <img
-                                                src={require("../../components/companyCard/company.jpeg")}
+                                                src={`http://localhost:3001${company.picture}`}
                                                 alt=""
+                                                width={200}
                                             />
                                             <Box>
                                                 <Typography variant='h4' sx={{ fontWeight: 700 }}>
@@ -148,15 +147,15 @@ function JobDetailsPage() {
                                             </Box>
                                         </Stack>
                                         {!isCompany ?
-                                        <Box>
-                                            <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize: 20 }}>Apply</Button>
-                                            <IconButton variant="outlined" color={checkIfFavourite(job._id) ? "error" : "neutral"} sx={{ mr: 'auto' }} onClick={() => handleFavouriteButton(job._id)} sx={{ flexGrow: 0 }}>
-                                                <FavoriteIcon />
-                                            </IconButton>
-                                        </Box>
-                                        : null
+                                            <Box>
+                                                <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize: 20 }}>Apply</Button>
+                                                <IconButton variant="outlined" color={checkIfFavourite(job._id) ? "error" : "neutral"} sx={{ mr: 'auto' }} onClick={() => handleFavouriteButton(job._id)} sx={{ flexGrow: 0 }}>
+                                                    <FavoriteIcon />
+                                                </IconButton>
+                                            </Box>
+                                            : null
                                         }
-                                        
+
 
                                     </Box>
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
@@ -191,7 +190,7 @@ function JobDetailsPage() {
                                         <ChecklistOutlinedIcon />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>SKILLS: </Typography>
                                         {job.skills.length ? job.skills.map((skill, i) => {
-                                            return <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: '#ccccff' }}  key={i} />
+                                            return <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: '#ccccff' }} key={i} />
                                         }) : null}
                                     </Stack>
                                     <Divider />

@@ -32,12 +32,14 @@ module.exports.createCompany = catchAsync(async (req, res, next) => {
 
 module.exports.deleteCompany = catchAsync(async (req, res, next) => {
     const { companyId } = req.params;
-    const result = await CompanyService.deleteCompany(companyId);
+    const loggedUser = req.user
+    console.log('deleting company')
+    const result = await CompanyService.deleteCompany(loggedUser,companyId);
     if (result) {
+        if(result.picture) removeFile({ path: 'public/img/company/'.concat(result.picture) })
         res.status(200).json(result);
     }
     else {
-        removeFile({ path: 'public/img/company/'.concat(result.picture) })
         return next(new AppError('Company not deleted', 400))
     }
 
@@ -46,7 +48,8 @@ module.exports.deleteCompany = catchAsync(async (req, res, next) => {
 
 module.exports.updateCompany = catchAsync(async (req, res, next) => {
     const { companyId } = req.params;
-    const companyObject = toCompanyObject(req);
+    const companyObject = toCompanyObject(req)
+    console.log(companyObject)
     const result = await CompanyService.updateCompany(companyId, companyObject);
     if (result) {
         res.status(200).json(result);

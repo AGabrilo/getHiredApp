@@ -1,4 +1,4 @@
-const { UserModel } = require("../models")
+const { UserModel, ApplicationModel, NotificationModel, FavouriteModel } = require("../models")
 
 module.exports.getAllUsers = async () => {
     return await UserModel.find();
@@ -30,6 +30,11 @@ module.exports.deleteUser = async (userId, loggedUser) => {
     const filter = {
         _id: userId
     }
-    if(loggedUser.role === 'admin' || loggedUser._id === userId) return await UserModel.findOneAndDelete(filter);
+    // delete all user applications, notifications and favourites
+    if(loggedUser.role === 'admin' || loggedUser._id.toString() === userId) {
+        await ApplicationModel.deleteMany({userId})
+        await NotificationModel.deleteMany({userId})
+        await FavouriteModel.deleteMany({userId})
+        return await UserModel.findOneAndDelete(filter);}
     return null
 }

@@ -4,30 +4,23 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import dateFormat from 'dateformat';
 
 function ExperienceItem(props) {
-    const {experience, getData, userData,  i, details } = props;
+    const { experience, getData, userData, i, details } = props;
     const newArray = userData.workExperience
 
-    console.log(newArray)
+    const handleUpdate = (id) => {
 
-
-    const handleUpdate = (id, updatedObject) => {
-        
         fetch(`http://localhost:3001/api/user/${id}`, {
             method: 'PUT',
-            body: JSON.stringify({workExperience:newArray}),
+            body: JSON.stringify({ workExperience: newArray }),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
-            .then((res) => res.json())
-            .then((data) => {
-                getData()
-            })
+            .then(() => getData())
             .catch((err) => {
                 console.log(err.message);
             });
-
     }
 
     return (
@@ -47,8 +40,8 @@ function ExperienceItem(props) {
                     </Grid>
                 </Grid>
                 {details ?
-                null
-            : <IconButton onClick={()=>handleUpdate(userData._id,{workExperience: newArray.splice(i,1)})}><DeleteIcon /></IconButton>} 
+                    null
+                    : <IconButton onClick={() => handleUpdate(userData._id, { workExperience: newArray.splice(i, 1) })}><DeleteIcon /></IconButton>}
             </Box>
             <Divider />
         </>

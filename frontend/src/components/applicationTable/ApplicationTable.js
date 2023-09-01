@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Stack, Typography, IconButton } from '@mui/material';
+import { Button, Stack, Typography, IconButton, Avatar } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/Download';
 import { saveAs } from 'file-saver'
+import { useNavigate } from "react-router-dom";
 
 function ApplicationTable(props) {
   const { applications, users, jobs, getData, setApplications } = props;
+  const navigate = useNavigate();
   const [rows, setRows] = useState(applications.map((appl, i) => {
     return {
       id: i,
       _id: appl._id,
       firstName: users.filter((user) => user._id === appl.userId)[0].firstName,
       lastName: users.filter((user) => user._id === appl.userId)[0].lastName,
+      picture: users.filter((user) => user._id === appl.userId)[0].picture,
       jobTitle: jobs.filter((job) => job._id === appl.jobId)[0].jobTitle,
       jobType: jobs.filter((job) => job._id === appl.jobId)[0].jobType,
       status: appl.status
@@ -54,6 +57,7 @@ function ApplicationTable(props) {
         _id: appl._id,
         firstName: users.filter((user) => user._id === appl.userId)[0].firstName,
         lastName: users.filter((user) => user._id === appl.userId)[0].lastName,
+        picture: users.filter((user) => user._id === appl.userId)[0].picture,
         jobTitle: jobs.filter((job) => job._id === appl.jobId)[0].jobTitle,
         jobType: jobs.filter((job) => job._id === appl.jobId)[0].jobType,
         status: appl.status,
@@ -126,11 +130,12 @@ function ApplicationTable(props) {
       .catch((err) => {
         console.log(err.message);
       });
-
   }
 
   const columns = [
-    { field: 'id', headerName: 'ID', flex: 1, minWidth: 60 },
+    { field: 'picture', headerName: '', flex: 1, minWidth: 70,
+    renderCell: (row) =>
+    <Avatar sx={{ml:2}} src={row.row.picture ? `http://localhost:3001${row.row.picture}`:''}/> },
     {
       field: 'firstName',
       headerName: 'First name',
@@ -187,7 +192,7 @@ function ApplicationTable(props) {
               <IconButton onClick={() => handleUpdate(row.row, 'Rejected')}>
                 <ClearIcon />
               </IconButton>
-              <IconButton onClick={() => handleUpdate(row.row, 'Rejected')}>
+              <IconButton onClick={() => navigate(`/users/${row.row.userId}`)}>
                 <InfoIcon />
               </IconButton>
             </>}

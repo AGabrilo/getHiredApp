@@ -1,12 +1,13 @@
-import { Avatar, Box, Grid, Typography, Stack, Paper, Chip, Button, IconButton } from '@mui/material';
+import { Avatar, Box, Grid, Typography, Stack, Paper, Chip, Button, IconButton, CircularProgress } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { DeleteDialog, EducationForm, EducationItem, ExperienceForm, ExperienceItem, UserForm } from '../../components';
 import PictureForm from '../../components/pictureForm/PictureForm';
 
 function ProfilePage() {
     const id = localStorage.getItem('id');
+    const role = localStorage.getItem('role');
     const [userData, setUserData] = useState()
     const [open, setOpen] = useState(false)
     const [openForm, setOpenForm] = useState(false);
@@ -35,8 +36,6 @@ function ProfilePage() {
             .catch((err) => {
                 console.log(err.message);
             });
-
-
     }
 
     const handleUpdate = (userId, updatedUserObject) => {
@@ -44,19 +43,20 @@ function ProfilePage() {
             'Content-type': 'application/json; charset=UTF-8',
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
-        let formData = {}
+        let body = JSON.stringify(updatedUserObject)
+        let formData = new FormData();
         if (updatedUserObject.resume || updatedUserObject.picture) {
-
-            formData = new FormData();
             formData.append("picture", updatedUserObject.picture)
+            formData.append("resume", updatedUserObject.resume)
             headers = {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
+            body = formData
         }
 
         fetch(`http://localhost:3001/api/user/${userId}`, {
             method: 'PUT',
-            body: formData ? formData : JSON.stringify(updatedUserObject),
+            body: body,
             headers: headers
         })
             .then((res) => res.json())
@@ -68,7 +68,7 @@ function ProfilePage() {
             });
     }
 
-    const getData = () => {
+    const getData = useCallback(() => {
         fetch(`http://localhost:3001/api/user/${id}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -77,18 +77,14 @@ function ProfilePage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('dataa', data)
                 setUserData(data)
-
             })
             .catch((e) => console.log('error', e));
-    }
+    }, [id])
 
     useEffect(() => {
         getData()
-    }, [])
-
-    console.log('userData', userData)
+    }, [getData])
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb', height: '100vh' }}>
@@ -103,12 +99,10 @@ function ProfilePage() {
                                 <Paper sx={{ p: 2.4, backgroundColor: 'white', width: '100%', borderRadius: 2.5 }}>
                                     <Stack direction={'column'} spacing={3}>
                                         <Typography variant='h5'>Email: {userData.email}</Typography>
-                                        {userData.location ? <>
-                                            <Typography variant='h5'>Location: {userData.location.city}, {userData.location.country}</Typography>
-                                        </> : null}
+                                            <Typography variant='h5'>Location: {userData.location && userData.location.city}, {userData.location && userData.location.country}</Typography>
                                     </Stack>
                                 </Paper>
-                                <Button variant='contained' sx={{ width: 200, height: 60, fontSize: 16, backgroundColor: '#f2572c' }} onClick={() => setOpen(true)}>Delete profile</Button>
+                                {role === 'admin' ? null : <Button variant='contained' sx={{ width: 200, height: 60, fontSize: 16, backgroundColor: '#f2572c' }} onClick={() => setOpen(true)}>Delete profile</Button>}
 
                                 <Button variant='contained' sx={{ width: 200, height: 60, fontSize: 16, backgroundColor: '#f2572c' }} onClick={() => setOpenForm(true)}>Update profile</Button>
 
@@ -116,7 +110,7 @@ function ProfilePage() {
                             </Stack>
                         </Grid>
 
-                        <Grid item xs={12} md={8} lg={8} sx={{ mt: 5 }}>
+                        {role === 'admin' ? null : <Grid item xs={12} md={8} lg={8} sx={{ mt: 5 }}>
                             <Stack spacing={2}  >
                                 <Paper sx={{ p: 4, backgroundColor: 'white', width: '100%', borderRadius: 2.5 }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -129,9 +123,12 @@ function ProfilePage() {
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                                         <Typography variant='h4' sx={{ color: '#f2572c' }}>My resume</Typography>
                                     </Box>
-                                    <Typography variant='h5'>{userData.resume}</Typography>
-                                    <input type="file" name='resume' onChange={(e) => setFileList} multiple />
-                                    <Button onClick={() => handleUpdate(id, fileList)} variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa', ml:1 }}> Add resume</Button>
+                                    <Typography variant='h5' sx={{ overflowWrap: 'break-word' }}>{userData.resume}</Typography>
+                                    <Box sx={{ display: 'flex', overflowWrap: 'break-word', mb: 2 }}>
+                                        <input type="file" name='resume' onChange={(e) => setFileList(e.target.files)} multiple />
+                                    </Box>
+
+                                    <Button onClick={() => handleUpdate(id, { resume: fileList[0] })} variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa', ml: 1 }}> Add resume</Button>
                                 </Paper>
 
                                 <Paper sx={{ p: 4, backgroundColor: 'white', width: '100%', borderRadius: 2.5 }}>
@@ -141,8 +138,8 @@ function ProfilePage() {
                                     </Box>
                                     <Grid container spacing={2}>
                                         {userData.skills && userData.skills.length ?
-                                            userData.skills.map((skill) => <Grid item>
-                                                <Chip label={skill} variant="outlined" size='medium' />
+                                            userData.skills.map((skill, i) => <Grid item key={i}>
+                                                <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: '#ccccff' }}/>
                                             </Grid>)
                                             : null}
                                     </Grid>
@@ -155,7 +152,7 @@ function ProfilePage() {
                                         <IconButton onClick={() => setEducationForm(true)}> <AddIcon /></IconButton>
                                     </Box>
                                     {userData.education && userData.education.length ?
-                                        userData.education.map((educ, i) => <EducationItem education={educ} userData={userData} getData={getData} i={i} />)
+                                        userData.education.map((educ, i) => <EducationItem education={educ} userData={userData} getData={getData} i={i} key={i} />)
                                         : null}
                                 </Paper>
 
@@ -165,24 +162,21 @@ function ProfilePage() {
                                         <IconButton onClick={() => setExperienceForm(true)}> <AddIcon /></IconButton>
                                     </Box>
                                     {userData.workExperience && userData.workExperience.length ?
-                                        userData.workExperience.map((exp, i) => <ExperienceItem experience={exp} userData={userData} getData={getData} i={i} />)
+                                        userData.workExperience.map((exp, i) => <ExperienceItem experience={exp} userData={userData} getData={getData} i={i} key={i}/>)
                                         : null}
 
                                 </Paper>
                             </Stack>
-                        </Grid>
+                        </Grid>}
                     </Grid>
                     <DeleteDialog open={open} setOpen={setOpen} id={id} handleDeleteButton={handleDeleteButton} component='user' />
-                    {openForm ? <UserForm open={openForm} setOpen={setOpenForm} user={userData} handleUpdate={handleUpdate} /> : null}
-                    {experienceForm ? <ExperienceForm open={experienceForm} setOpen={setExperienceForm} user={userData} handleUpdate={handleUpdate} /> : null}
-                    {educationForm ? <EducationForm open={educationForm} setOpen={setEducationForm} user={userData} handleUpdate={handleUpdate} /> : null}
+                    <UserForm open={openForm} setOpen={setOpenForm} user={userData} handleUpdate={handleUpdate} /> 
+                     <ExperienceForm open={experienceForm} setOpen={setExperienceForm} user={userData} handleUpdate={handleUpdate} /> 
+                     <EducationForm open={educationForm} setOpen={setEducationForm} user={userData} handleUpdate={handleUpdate} /> 
                     <PictureForm open={pictureForm} setOpen={setPictureForm} id={id} handleApplyButton={handleUpdate} />
                 </Box>
-                : null}
-
+                : <CircularProgress/>}
         </Box>
-
-
     )
 }
 
