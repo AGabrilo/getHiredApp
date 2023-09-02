@@ -11,8 +11,8 @@ function JobDialogForm(props) {
     const jobTypes = useSelector(selectJobTypesConf)
     const skills = useSelector(selectSkillsConf)
     const workLocations = useSelector(selectWorkLocationsConf)
-    const initialValues = job ? { _id: job._id, jobTitle: job.jobTitle, description: job.description, hiringNum: job.hiringNum, location: { city: job.location.city, country: job.location.country }, jobType: job.jobType, skills: job.skills, workLocation: job.workLocation, deadline: job.deadline } 
-    : { jobTitle: '', description: '', hiringNum: '', location: { city: '', country: '' }, jobType: '', skills: [], workLocation: '', deadline: dayjs('2022-04-17') }
+    const initialValues = job ? { _id: job._id, jobTitle: job.jobTitle, description: job.description, hiringNum: job.hiringNum, location: { city: job.location.city, country: job.location.country }, jobType: job.jobType, skills: job.skills, workLocation: job.workLocation, deadline: job.deadline }
+        : { jobTitle: '', description: '', hiringNum: '', location: { city: '', country: '' }, jobType: '', skills: [], workLocation: '', deadline: dayjs('2022-04-17') }
 
     const formik = useFormik({
         initialValues: initialValues,
@@ -122,7 +122,7 @@ function JobDialogForm(props) {
                         defaultValue={formik.values['jobType']}
                         value={formik.values['jobType']}
                         onChange={(e, value) => formik.setFieldValue("jobType", value)}
-                        options={jobTypes ? jobTypes.map((type) => type.key):[]}
+                        options={jobTypes ? jobTypes.map((type) => type.key) : []}
                         renderInput={(params) => (
                             <TextField {...params} label={'Job type'} />
                         )}
@@ -134,7 +134,7 @@ function JobDialogForm(props) {
                         defaultValue={formik.values['workLocation']}
                         value={formik.values['workLocation']}
                         onChange={(e, value) => formik.setFieldValue("workLocation", value)}
-                        options={workLocations.map((type) => type.key)}
+                        options={workLocations ? workLocations.map((type) => type.key) : []}
                         renderInput={(params) => (
                             <TextField {...params} label={'Work location'} />
                         )}
@@ -148,14 +148,14 @@ function JobDialogForm(props) {
                         defaultValue={formik.values['skills']}
                         value={formik.values['skills']}
                         onChange={(e, value) => formik.setFieldValue("skills", value)}
-                        options={skills.map((skill) => skill.key)}
+                        options={skills ? skills.map((skill) => skill.key) : []}
                         renderInput={(params) => (
                             <TextField {...params} label={'Skills'} />
                         )}
                         sx={{ mb: 2 }}
                     />
-                    <DatePicker label="Expiring date" sx={{width:'100%'}} />
-                    
+                    <DatePicker label="Expiring date" sx={{ width: '100%' }} />
+
                 </Box>
             </DialogContent>
             <DialogActions>

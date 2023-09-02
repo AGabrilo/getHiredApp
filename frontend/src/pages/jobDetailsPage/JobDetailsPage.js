@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Button, CardContent, Card, Typography, Stack, Grid, Paper, IconButton, Divider, Chip } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { DeleteJobButton, TopCompanies } from '../../components';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useSelector } from 'react-redux';
+import { selectCompaniesConf } from '../../redux/companiesSlice';
 import dateFormat from 'dateformat';
-import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import { PeopleAltOutlined, WorkOutlineOutlined, LocationOnOutlined, CalendarMonthOutlined, ChecklistOutlined, Favorite } from '@mui/icons-material';
 import UpdateJobButton from '../../components/updateJobButton/UpdateJobButton';
 
 function JobDetailsPage() {
     let { jobId } = useParams();
     const isCompany = localStorage.getItem('role') === 'company' ? true : false
     const [job, setJob] = useState();
+    const companies = useSelector(selectCompaniesConf)
     const [company, setCompany] = useState({})
     const [favourite, setFavourite] = useState([])
+    const id = localStorage.getItem('id')
+
     const getFavourites = () => {
-        fetch('http://localhost:3001/api/favourite/649e9c19f92c6b347d394b33', {
+        fetch(`http://localhost:3001/api/favourite/${id}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -38,7 +38,6 @@ function JobDetailsPage() {
 
     const handleFavouriteButton = (jobId) => {
         let check = checkIfFavourite(jobId)
-        console.log(check)
         if (checkIfFavourite(jobId)) {
             fetch(`http://localhost:3001/api/favourite/${check[0]._id}`, {
                 method: 'DELETE',
@@ -59,7 +58,7 @@ function JobDetailsPage() {
         else {
             fetch(`http://localhost:3001/api/favourite`, {
                 method: 'POST',
-                body: JSON.stringify({ userId: '649e9c19f92c6b347d394b33', jobId: jobId }),
+                body: JSON.stringify({ userId: id, jobId: jobId }),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -79,7 +78,7 @@ function JobDetailsPage() {
         getFavourites()
     }, [])
 
-    const getData = () => {
+    const getData = useCallback(() => {
         fetch(`http://localhost:3001/api/job/${jobId}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -89,25 +88,14 @@ function JobDetailsPage() {
             .then((response) => response.json())
             .then((data) => {
                 setJob(data)
+                setCompany(companies.filter((company)=>company._id === data.companyId)[0])
             })
-            .then(() => {
-                fetch(`http://localhost:3001/api/company/${job.companyId}`, {
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        setCompany(data)
-                    });
-            });
-    }
+    }, [jobId, companies])
 
     useEffect(() => {
         getData()
 
-    }, [jobId])
+    }, [jobId, getData])
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
@@ -117,7 +105,7 @@ function JobDetailsPage() {
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'wrap' }}>
                     <Grid container spacing={2} item xs={12} md={9} lg={9} sx={{ height: 'fit-content', mb: 3 }}>
-                        {job ?
+                        {job && company ?
                             <Card
                                 orientation="horizontal"
                                 sx={{
@@ -133,6 +121,8 @@ function JobDetailsPage() {
                                                 src={`http://localhost:3001${company.picture}`}
                                                 alt=""
                                                 width={200}
+                                                height={200}
+                                                onClick={()=>console.log(company.picture)}
                                             />
                                             <Box>
                                                 <Typography variant='h4' sx={{ fontWeight: 700 }}>
@@ -150,44 +140,43 @@ function JobDetailsPage() {
                                             <Box>
                                                 <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize: 20 }}>Apply</Button>
                                                 <IconButton variant="outlined" color={checkIfFavourite(job._id) ? "error" : "neutral"} sx={{ mr: 'auto' }} onClick={() => handleFavouriteButton(job._id)} sx={{ flexGrow: 0 }}>
-                                                    <FavoriteIcon />
+                                                    <Favorite />
                                                 </IconButton>
                                             </Box>
                                             : null
                                         }
 
-
                                     </Box>
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
-                                        <WorkOutlineOutlinedIcon />
+                                        <WorkOutlineOutlined />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>JOB TYPE: </Typography>
                                         <Typography variant='h5' sx={{ color: '#303030' }}>{job.jobType}</Typography>
                                     </Stack>
                                     <Divider />
 
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
-                                        <LocationOnOutlinedIcon />
+                                        <LocationOnOutlined />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>LOCATION: </Typography>
                                         <Typography variant='h5' sx={{ color: '#303030' }}>{job.workLocation}</Typography>
                                     </Stack>
                                     <Divider />
 
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
-                                        <CalendarMonthOutlinedIcon />
+                                        <CalendarMonthOutlined />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>POSTED: </Typography>
                                         <Typography variant='h5' sx={{ color: '#303030' }}> {dateFormat(job.datePosted, "mmmm dS, yyyy")}</Typography>
                                     </Stack>
                                     <Divider />
 
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
-                                        <PeopleAltOutlinedIcon />
+                                        <PeopleAltOutlined />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>HIRING NUMBER: </Typography>
                                         <Typography variant='h5' sx={{ color: '#303030' }}>{job.hiringNum}</Typography>
                                     </Stack>
                                     <Divider />
 
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
-                                        <ChecklistOutlinedIcon />
+                                        <ChecklistOutlined />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>SKILLS: </Typography>
                                         {job.skills.length ? job.skills.map((skill, i) => {
                                             return <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: '#ccccff' }} key={i} />
@@ -202,7 +191,7 @@ function JobDetailsPage() {
                                     </Stack>
                                     <Divider />
                                     <Stack direction="row" spacing={2} sx={{ ml: 1, my: 1 }} flexWrap={'wrap'}>
-                                        <CalendarMonthOutlinedIcon />
+                                        <CalendarMonthOutlined />
                                         <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>DEADLINE: </Typography>
                                         <Typography variant='h5' sx={{ color: '#303030' }}> {dateFormat(job.deadline, "mmmm dS, yyyy")}</Typography>
                                     </Stack>
@@ -212,9 +201,7 @@ function JobDetailsPage() {
                                         <Box sx={{ mt: 3 }}>
                                             <DeleteJobButton job={job} />
                                             <UpdateJobButton job={job} getData={getData} />
-
                                         </Box>
-
                                         : null}
                                 </CardContent>
                             </Card>
@@ -230,7 +217,6 @@ function JobDetailsPage() {
                         </Stack>
                     </Grid>
                 </Box>
-
             </Box>
         </Box >
     )

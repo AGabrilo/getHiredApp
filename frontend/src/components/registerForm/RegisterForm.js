@@ -1,7 +1,5 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { useSelector } from 'react-redux';
-import { selectJobsConf } from '../../redux/jobsSlice';
 import { useNavigate } from "react-router-dom";
 import { Box, Button, CardHeader, TextField, Card, CardActions, CardContent, Typography } from '@mui/material';
 
@@ -17,8 +15,6 @@ function RegisterForm(props) {
             handleRegister(values)
         }
     })
-    const theUser = useSelector(selectJobsConf)
-    console.log(theUser)
     const handleRegister = (values) => {
         fetch("http://localhost:3001/api/auth/signup", {
             method: "POST",

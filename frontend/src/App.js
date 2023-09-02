@@ -24,7 +24,7 @@ function App() {
             <Route exact path="myapplications" element={<ProtectedRoute type='companyAndUser'><MyApplicationsPage /></ProtectedRoute>} />
             <Route exact path="/login" element={<LoginPage />} />
             <Route exact path="/signup" element={<SignUpPage />} />
-            <Route exact path="/myprofile" element={<ProtectedRoute type='all'>{role === 'company' ? <ProfilePageCompany /> : <ProfilePage />}</ProtectedRoute>} />
+            <Route exact path="/myprofile" element={<ProtectedRoute type='all'> <ProfilePage /></ProtectedRoute>} />
             <Route exact path="/studentsTable" element={<ProtectedRoute type='admin'><UsersPage /></ProtectedRoute>} />
             <Route exact path="/companiesTable" element={<ProtectedRoute type='admin'><CompaniesPageAdmin /></ProtectedRoute>} />
             <Route path="companies/:companyId" element={<ProtectedRoute type='all'><CompanyDetailsPage /></ProtectedRoute>} />

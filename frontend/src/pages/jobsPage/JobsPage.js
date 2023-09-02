@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import { JobFilters, JobCard, SearchComponent } from '../../components';
 import { useSelector } from 'react-redux';
@@ -6,7 +6,6 @@ import { selectJobsConf } from '../../redux/jobsSlice';
 import { selectJobTypesConf, selectSkillsConf, selectWorkLocationsConf } from '../../redux/configurationSlice';
 
 function JobsPage() {
-    const [jobs, setJobs] = useState([]);
     const [name, setName] = useState();
     const [location, setLocation] = useState();
     const [filteredData, setFilteredData] = useState(useSelector(selectJobsConf))
@@ -18,9 +17,9 @@ function JobsPage() {
     const workLocations = useSelector(selectWorkLocationsConf)
     const allJobs = useSelector(selectJobsConf)
     const noDataWidth = window.innerWidth - 300
-    const queryParams = new URLSearchParams()
+    const queryParams = useMemo(() => new URLSearchParams(), []);
 
-    const getData = () => {
+    const getData = useCallback(() => {
         fetch(`http://localhost:3001/api/job?` + queryParams.toString(), {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -31,9 +30,9 @@ function JobsPage() {
             .then((data) => {
                 setFilteredData(data)
             });
-    }
+    }, [queryParams])
 
-    const getSearchedData = () => {
+    const getSearchedData = useCallback(() => {
         if (!name && !location) {
             setFilteredData(allJobs);
         } else if (name && !location) {
@@ -45,9 +44,9 @@ function JobsPage() {
         else {
             setFilteredData(allJobs.filter((d) => (d.location.city.toLowerCase().includes(location) || d.location.country.toLowerCase().includes(location)) && d.jobTitle.toLowerCase().includes(name)));
         }
-    }
+    }, [allJobs, location, name])
 
-    const getFilteredData = () => {
+    const getFilteredData = useCallback(() => {
         if (filteredJobType.length) {
             for (let jobType of filteredJobType) {
                 queryParams.append('jobType', jobType)
@@ -70,7 +69,7 @@ function JobsPage() {
             queryParams.delete("workLocation")
         }
         getData()
-    }
+    }, [filteredJobType, filteredSkills, filteredWorkLocation, queryParams, getData])
 
     useEffect(() => {
         getData()
@@ -78,22 +77,20 @@ function JobsPage() {
 
     useEffect(() => {
         getSearchedData()
-    }, [name, location])
+    }, [name, location, getSearchedData])
 
     useEffect(() => {
         getFilteredData()
-    }, [filteredJobType, filteredSkills, filteredWorkLocation])
+    }, [filteredJobType, filteredSkills, filteredWorkLocation, getFilteredData])
 
     const handleApplyButton = (formData) => {
         fetch(`http://localhost:3001/api/application`, {
             method: 'POST',
             body: formData
         })
-            .then((res) => { res.json(); console.log('done') })
             .catch((err) => {
                 console.log(err.message);
             });
-
     }
 
     return (
@@ -102,7 +99,7 @@ function JobsPage() {
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
                 <SearchComponent setLocation={setLocation} setName={setName} component='Job' />
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'no-wrap' }}>
-                    <Grid container spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%' }}>
+                    <Grid container item spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%' }}>
                         {filteredData.length ?
                             filteredData.map((job, i) => {
                                 return <Grid container item sm={12} md={6} lg={6} xl={4} key={i}>
@@ -113,7 +110,6 @@ function JobsPage() {
                                 <Box sx={{ width: '100%' }}>
                                     <Typography variant='h5'> No data</Typography>
                                 </Box>
-
                             </Grid>
                         }
                     </Grid>

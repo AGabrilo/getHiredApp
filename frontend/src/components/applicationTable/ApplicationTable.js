@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, Stack, Typography, IconButton, Avatar } from '@mui/material';
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import ClearIcon from '@mui/icons-material/Clear';
-import InfoIcon from '@mui/icons-material/Info';
-import DownloadIcon from '@mui/icons-material/Download';
+import { Download, Info, Clear, DoneOutline } from '@mui/icons-material';
 import { saveAs } from 'file-saver'
 import { useNavigate } from "react-router-dom";
 
 function ApplicationTable(props) {
   const { applications, users, jobs, getData, setApplications } = props;
   const navigate = useNavigate();
+  const role = localStorage.getItem('role')
   const [rows, setRows] = useState(applications.map((appl, i) => {
     return {
       id: i,
@@ -24,9 +22,6 @@ function ApplicationTable(props) {
       status: appl.status
     }
   }))
-  const role = localStorage.getItem('role')
-
-  console.log('rowsss', rows)
 
   const handleDeleteButton = (id) => {
     console.log('iddd', id)
@@ -37,21 +32,17 @@ function ApplicationTable(props) {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
     })
-      .then((res) => {
-        res.json()
+      .then(() => {
         setApplications([])
         getData()
       })
       .catch((err) => {
         console.log(err.message);
       });
-
   }
-  console.log('Applicationssssss', applications)
 
   useEffect(() => {
     setRows(applications.map((appl, i) => {
-
       return {
         id: i,
         _id: appl._id,
@@ -65,8 +56,7 @@ function ApplicationTable(props) {
         userId: appl.userId
       }
     }))
-  }, [applications])
-
+  }, [applications, jobs, users])
 
   const handleUpdate = (application, updatedStatus) => {
     fetch(`http://localhost:3001/api/application/${application._id}`, {
@@ -80,15 +70,12 @@ function ApplicationTable(props) {
       .then((res) => res.json())
       .then((data) => {
         setApplications(data)
-        console.log(application, 'iddddddddddd')
         sendNotification(application.userId, application.jobTitle, application.status)
         getData()
-
       })
       .catch((err) => {
         console.log(err.message);
       });
-
   }
 
   const sendNotification = (userId, jobName, status) => {
@@ -100,19 +87,13 @@ function ApplicationTable(props) {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        getData()
-
-      })
+      .then(() => getData())
       .catch((err) => {
         console.log(err.message);
       });
-
   }
 
   const handleDownload = (rowData) => {
-    console.log(rowData, 'resume')
     fetch(`http://localhost:3001/api/user/download/${rowData._id}`, {
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -123,9 +104,7 @@ function ApplicationTable(props) {
       .then((data) => {
         const blob = new Blob([data], { type: 'application/pdf' })
         saveAs(blob, `Resume_${rowData.firstName}_${rowData.lastName}.pdf`)
-        console.log('done', data)
         getData()
-
       })
       .catch((err) => {
         console.log(err.message);
@@ -133,9 +112,11 @@ function ApplicationTable(props) {
   }
 
   const columns = [
-    { field: 'picture', headerName: '', flex: 1, minWidth: 70,
-    renderCell: (row) =>
-    <Avatar sx={{ml:2}} src={row.row.picture ? `http://localhost:3001${row.row.picture}`:''}/> },
+    {
+      field: 'picture', headerName: '', flex: 1, minWidth: 70,
+      renderCell: (row) =>
+        <Avatar sx={{ ml: 2 }} src={row.row.picture ? `http://localhost:3001${row.row.picture}` : ''} />
+    },
     {
       field: 'firstName',
       headerName: 'First name',
@@ -173,7 +154,7 @@ function ApplicationTable(props) {
       width: 50,
       renderCell: (row) =>
         <IconButton onClick={() => handleDownload(row.row)}>
-          <DownloadIcon />
+          <Download />
         </IconButton>
     },
     {
@@ -187,21 +168,19 @@ function ApplicationTable(props) {
             <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => handleDeleteButton(row.row._id)}>Delete</Button>
             : <>
               <IconButton onClick={() => handleUpdate(row.row, 'Candidate')}>
-                <DoneOutlineIcon />
+                <DoneOutline />
               </IconButton>
               <IconButton onClick={() => handleUpdate(row.row, 'Rejected')}>
-                <ClearIcon />
+                <Clear />
               </IconButton>
               <IconButton onClick={() => navigate(`/users/${row.row.userId}`)}>
-                <InfoIcon />
+                <Info />
               </IconButton>
             </>}
-
         </Stack>
       ,
     },
   ];
-
 
   return (
     <Box sx={{ height: 'fit-content', p: 8, backgroundColor: 'white', display: 'flex', alignItems: 'center', flexDirection: 'column', width: '100%' }}>

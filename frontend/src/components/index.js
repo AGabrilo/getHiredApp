@@ -9,7 +9,6 @@ import EducationForm from './educationForm/EducationForm';
 import EducationItem from './educationItem/EducationItem';
 import ExperienceForm from './experienceForm/ExperienceForm';
 import ExperienceItem from './experienceItem/ExperienceItem';
-import FavouriteCard from './favouriteCard/FavouriteCard';
 import FavouriteCardView from './favouriteCardView/FavouriteCardView';
 import JobFilters from './jobFilters/JobFilters';
 import JobCard from './jobCard/JobCard';
@@ -17,13 +16,10 @@ import JobDialogForm from './jobDialogForm/JobDialogForm';
 import SearchComponent from './searchComponent/SearchComponent';
 import LoginForm from './loginForm/LoginForm';
 import NavBar from './navBar/NavBar';
-import PostedJob from './postedJob/PostedJob';
 import RegisterForm from './registerForm/RegisterForm';
 import TopCompanies from './topCompanies/TopCompanies';
-import UserDialogForm from './userDialogForm/UserDialogForm';
 import UserForm from './userForm/UserForm';
 import UserTable from './userTable/UserTable';
-import CompanyTable from './companyTable/CompanyTable';
 
 export {
     ApplicationTable,
@@ -37,7 +33,6 @@ export {
     EducationItem,
     ExperienceForm,
     ExperienceItem,
-    FavouriteCard,
     FavouriteCardView,
     JobFilters,
     JobCard,
@@ -45,11 +40,8 @@ export {
     SearchComponent,
     LoginForm,
     NavBar,
-    PostedJob,
     RegisterForm,
     TopCompanies,
-    UserDialogForm,
     UserForm,
-    UserTable,
-    CompanyTable
+    UserTable
 }

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, CardContent, Card, Typography, Stack, Grid, Paper } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Box, CardContent, Card, Typography, Stack, Grid, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectJobsConf } from '../../redux/jobsSlice';
-import { DeleteCompanyButton, JobCard, PostedJob, TopCompanies } from '../../components';
+import { DeleteCompanyButton, JobCard, TopCompanies } from '../../components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import './swiperCustom.css';
 import 'swiper/css';
@@ -15,9 +15,9 @@ function CompanyDetailsPage() {
     let { companyId } = useParams();
     const isCompany = true
     const [company, setCompany] = useState();
-    const allJobs = useSelector(selectJobsConf).filter((el)=>el.companyId ===companyId )
+    const allJobs = useSelector(selectJobsConf).filter((el) => el.companyId === companyId)
 
-    const getData = ()=>{
+    const getData = useCallback(() => {
         fetch(`http://localhost:3001/api/company/${companyId}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -28,19 +28,16 @@ function CompanyDetailsPage() {
             .then((data) => {
                 setCompany(data)
             });
-    }
-    
-    useEffect(() => {
-     getData()
-
     }, [companyId])
+
+    useEffect(() => {
+        getData()
+    }, [companyId, getData])
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
-
                 <Typography variant='h3' >Company Details</Typography>
-
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'wrap' }}>
                     <Grid container spacing={2} item xs={12} md={9} lg={9} sx={{ height: 'fit-content', mb: 3 }}>
                         {company ?
@@ -55,7 +52,7 @@ function CompanyDetailsPage() {
                                     <Stack direction={{ md: 'row', xs: 'column' }}
                                         spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '100%', alignItems: 'center' }} >
                                         <img
-                                           src={`http://localhost:3001${company.picture}`}
+                                            src={`http://localhost:3001${company.picture}`}
                                             alt=""
                                             width={200}
                                         />
@@ -84,8 +81,6 @@ function CompanyDetailsPage() {
 
                                         <Swiper
                                             spaceBetween={50}
-                                            onSlideChange={() => console.log('slide change')}
-                                            onSwiper={(swiper) => console.log(swiper)}
                                             navigation
                                             modules={[Navigation]}
                                             breakpoints={{
@@ -109,8 +104,8 @@ function CompanyDetailsPage() {
                                             }}
                                             className='swiper-container'
                                         >
-                                            {allJobs.map((job) => {
-                                                return <SwiperSlide><JobCard job={job} /></SwiperSlide>
+                                            {allJobs.map((job, i) => {
+                                                return <SwiperSlide key={i}><JobCard job={job} /></SwiperSlide>
                                             })}
                                         </Swiper>
 
@@ -118,8 +113,8 @@ function CompanyDetailsPage() {
 
                                     {isCompany ?
                                         <>
-                                            <DeleteCompanyButton  company={company}/>
-                                            <UpdateCompanyButton company={company} getData={getData}/>
+                                            <DeleteCompanyButton company={company} />
+                                            <UpdateCompanyButton company={company} getData={getData} />
                                         </>
                                         : null}
                                 </CardContent>

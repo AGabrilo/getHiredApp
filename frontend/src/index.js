@@ -7,11 +7,13 @@ import { store } from './redux/store';
 import { fetchConfiguration } from './redux/configurationSlice';
 import { fetchJob } from './redux/jobsSlice';
 import { fetchUsers } from './redux/userSlice';
+import { fetchCompany } from './redux/companiesSlice';
 
 //start loading initial conf list
 store.dispatch(fetchConfiguration())
 store.dispatch(fetchJob())
 store.dispatch(fetchUsers())
+store.dispatch(fetchCompany())
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,8 +21,5 @@ root.render(
     <Provider store={store}>
       <App />
     </Provider>
-
   </StyledEngineProvider>,
 );
-
-

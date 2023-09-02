@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import { Box, Button, TextField, Card, Typography, Stack, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@mui/material';
+import { Button } from '@mui/material';
 import CompanyDialogForm from '../companyDialogForm/CompanyDialogForm';
 
 function UpdateCompanyButton(props) {
@@ -17,14 +16,10 @@ function UpdateCompanyButton(props) {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
-            .then((res) => res.json())
-            .then((data) => {
-                getData()
-            })
+            .then(() => getData())
             .catch((err) => {
                 console.log(err.message);
             });
-
     }
 
     return (
@@ -34,7 +29,6 @@ function UpdateCompanyButton(props) {
             </Button>
             <CompanyDialogForm open={open} setOpen={setOpen} company={company} handleUpdate={handleUpdate} />
         </>
-
     )
 }
 

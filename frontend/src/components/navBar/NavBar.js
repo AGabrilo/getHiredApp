@@ -134,22 +134,37 @@ function NavBar() {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            <MenuItem key='jobs' onClick={handleCloseNavMenu}>
-                                <Link to='/jobs'><Typography textAlign="center">Jobs</Typography></Link>
-                            </MenuItem>
-                            <MenuItem key='companies' onClick={handleCloseNavMenu}>
-                                <Link to='/companies'> <Typography textAlign="center">Companies</Typography> </Link>
-                            </MenuItem>
-                            {role === 'user' ?
-                                <Box >
+                            {role === 'user' || role === 'company' ?
+                                <Box>
+                                    <MenuItem key='jobs' onClick={handleCloseNavMenu}>
+                                        <Link to='/jobs'><Typography textAlign="center">Jobs</Typography></Link>
+                                    </MenuItem>
+                                    <MenuItem key='companies' onClick={handleCloseNavMenu}>
+                                        <Link to='/companies'> <Typography textAlign="center">Companies</Typography> </Link>
+                                    </MenuItem>
                                     <MenuItem key='myapplications' onClick={handleCloseNavMenu}>
                                         <Link to='/myapplications'><Typography textAlign="center">My applications</Typography></Link>
                                     </MenuItem>
-                                    <MenuItem key='favourites' onClick={handleCloseNavMenu}>
-                                        <Link to='/favourites'><Typography textAlign="center">Favourites</Typography></Link>
-                                    </MenuItem>
                                 </Box>
-                                : null
+                                : null}
+
+                            {role === 'user' ?
+                                <MenuItem key='favouritesM' onClick={handleCloseNavMenu}>
+                                    <Link to='/favourites'><Typography textAlign="center">Favourites</Typography></Link>
+                                </MenuItem>
+                                : role === 'company' ?
+                                    <MenuItem key='myJobsM' onClick={handleCloseNavMenu}>
+                                        <Link to='/myJobs'><Typography textAlign="center">My Jobs</Typography></Link>
+                                    </MenuItem> : role === 'admin' ?
+                                        <Box>
+                                            <MenuItem key='studentsTableM' onClick={handleCloseNavMenu}>
+                                                <Link to='/studentsTable'><Typography textAlign="center">Students</Typography></Link>
+                                            </MenuItem>
+                                            <MenuItem key='companiesTableM' onClick={handleCloseNavMenu}>
+                                                <Link to='/companiesTable'><Typography textAlign="center">Companies</Typography></Link>
+                                            </MenuItem>
+                                        </Box>
+                                        : null
                             }
                         </Menu>
                     </Box>

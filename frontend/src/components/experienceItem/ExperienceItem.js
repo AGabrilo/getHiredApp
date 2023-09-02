@@ -8,7 +8,6 @@ function ExperienceItem(props) {
     const newArray = userData.workExperience
 
     const handleUpdate = (id) => {
-
         fetch(`http://localhost:3001/api/user/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ workExperience: newArray }),
@@ -45,7 +44,6 @@ function ExperienceItem(props) {
             </Box>
             <Divider />
         </>
-
     )
 }
 

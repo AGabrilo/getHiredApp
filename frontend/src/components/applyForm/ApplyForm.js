@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTitle, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, DialogActions, DialogTitle, Typography } from '@mui/material';
 
 function ApplyForm(props) {
   const { open, setOpen, id, handleApplyButton } = props;
@@ -17,7 +17,6 @@ function ApplyForm(props) {
       handleApplyButton(formData)
     }
   })
-  console.log(fileList)
 
   return (
     <Dialog

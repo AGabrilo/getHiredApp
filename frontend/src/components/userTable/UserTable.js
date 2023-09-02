@@ -75,7 +75,7 @@ function UserTable(props) {
             renderCell: (row) =>
                 <Stack direction={'row'} spacing={2}>
                     <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpenUpdateForm(true) }}>
-                        Update {console.log('row', row)}
+                        Update
                     </Button>
                     <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setUser(row.row); setOpen(true) }}>Delete</Button>
                     <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => navigate(`/${type}/${row.row._id}`)}>View</Button>
@@ -115,7 +115,7 @@ function UserTable(props) {
                 renderCell: (row) =>
                     <Stack direction={'row'} spacing={2}>
                         <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpenUpdateForm(true) }}>
-                            Update {console.log('row', row)}
+                            Update
                         </Button>
                         <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => { setCompany(row.row); setOpen(true) }}>Delete</Button>
                         <Button variant='contained' sx={{ backgroundColor: '#f2572c' }} onClick={() => navigate(`/${type}/${row.row._id}`)}>View</Button>

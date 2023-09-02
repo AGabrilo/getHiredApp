@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FormGroup, FormControlLabel, Checkbox, Typography, Paper } from '@mui/material';
 
 function JobFilters(props) {
@@ -35,6 +35,7 @@ function JobFilters(props) {
                                 "& .MuiSvgIcon-root":
                                     { fontSize: 28 }
                             }}
+                            key={i}
                         />
                     })}
                 </FormGroup>

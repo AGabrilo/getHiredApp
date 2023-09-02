@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  Button} from '@mui/material';
+import { Button } from '@mui/material';
 import JobDialogForm from '../jobDialogForm/JobDialogForm';
 
 function UpdateJobButton(props) {
@@ -16,19 +16,15 @@ function UpdateJobButton(props) {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
-            .then((res) => res.json())
-            .then((data) => {
-                getData()
-            })
+            .then(() => getData())
             .catch((err) => {
                 console.log(err.message);
             });
-
     }
 
     return (
         <>
-            <Button variant="contained" sx={{  backgroundColor: '#f2572c', mr: 2 }} onClick={() => setOpen(true)}>
+            <Button variant="contained" sx={{ backgroundColor: '#f2572c', mr: 2 }} onClick={() => setOpen(true)}>
                 Update
             </Button>
             <JobDialogForm open={open} setOpen={setOpen} job={job} handleUpdate={handleUpdate} />

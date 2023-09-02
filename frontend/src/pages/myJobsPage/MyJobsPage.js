@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { JobFilters, JobCard, SearchComponent, JobDialogForm } from '../../components';
+import {  JobCard, SearchComponent, JobDialogForm } from '../../components';
 import { useSelector } from 'react-redux';
 import { selectJobsConf } from '../../redux/jobsSlice';
 
 function MyJobsPage() {
-    const [jobs, setJobs] = useState([]);
     const [name, setName] = useState();
     const [location, setLocation] = useState();
     const id = localStorage.getItem('id')
     const allJobs = useSelector(selectJobsConf).filter((el) => el.companyId === id)
-    const [filteredData, setFilteredData] = useState(allJobs)
+    const [filteredData, setFilteredData] = useState([])
     const [open, setOpen] = useState(false);
     const noDataWidth = window.innerWidth - 300
 
@@ -23,18 +22,13 @@ function MyJobsPage() {
               'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
           })
-            .then((res) => res.json())
-            .then((data) => {
-              getData()
-      
-            })
+            .then(() => getData())
             .catch((err) => {
               console.log(err.message);
             });
     }
 
     const handleModifyButton = (jobObject) => {
-        console.log('handleModifyButton',jobObject)
         fetch(`http://localhost:3001/api/job/${jobObject._id}`, {
             method: 'PUT',
             body: JSON.stringify(jobObject),
@@ -43,7 +37,7 @@ function MyJobsPage() {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
               },
         })
-            .then((res) => { res.json(); getData() })
+            .then(() =>  getData() )
             .catch((err) => {
                 console.log(err.message);
             });
@@ -51,7 +45,6 @@ function MyJobsPage() {
     }
 
     const handleDeleteButton = (jobId) => {
-        console.log('handleDeleteButton',jobId)
         fetch(`http://localhost:3001/api/job/${jobId}`, {
             method: 'DELETE',
             headers: {
@@ -59,14 +52,14 @@ function MyJobsPage() {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
               },
         })
-            .then((res) => { res.json(); getData() })
+            .then(() =>  getData() )
             .catch((err) => {
                 console.log(err.message);
             });
 
     }
 
-    const getData = () => {
+    const getData = useCallback(() => {
         fetch(`http://localhost:3001/api/job`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -77,13 +70,13 @@ function MyJobsPage() {
             .then((data) => {
                 setFilteredData(data.filter((el) => el.companyId === id))
             });
-    }
+    }, [id])
+
     useEffect(() => {
         getData()
-    }, [])
+    }, [getData])
 
-    const getSearchedData = () => {
-        console.log(location, name)
+    const getSearchedData = useCallback(() => {
         if (!name && !location) {
             setFilteredData(allJobs);
         } else if (name && !location) {
@@ -95,7 +88,7 @@ function MyJobsPage() {
         else {
             setFilteredData(allJobs.filter((d) => (d.location.city.toLowerCase().includes(location) || d.location.country.toLowerCase().includes(location)) && d.jobTitle.toLowerCase().includes(name)));
         }
-    }
+    }, [allJobs, location, name])
 
     useEffect(() => {
         getSearchedData()
@@ -116,16 +109,16 @@ function MyJobsPage() {
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb', minHeight: '100vh', width:'100%' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column', py: 8, mx: 4, backgroundColor: '#e9e8eb' }}>
                 <Stack direction={{ md: 'row', xs: 'column' }}
-                    spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '90%', mb: 3 }}>
+                    spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '100%', mb: 3, justifyContent:'center' }}>
                     <SearchComponent setLocation={setLocation} setName={setName} component='Job' />
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <Button variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa', height: 55 }} onClick={() => setOpen(true)}>Add new job</Button>
                         <Button variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa', height: 55 }} onClick={()=>getExpiredData(id)}>Expired jobs</Button>
                     </Box>
                 </Stack>
-                <Grid container spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%' }}>
+                <Grid item container spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%', justifyContent:'flex-start' }}>
                     {filteredData.length ?
                         filteredData.map((job, i) => {
                             return <Grid container item sm={12} md={6} lg={6} xl={4} key={i}>

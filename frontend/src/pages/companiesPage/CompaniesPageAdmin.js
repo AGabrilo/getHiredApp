@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Stack, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { UserTable } from '../../components';
-
-
 
 function CompaniesPageAdmin() {
     const [rows, setRows] = useState([])
-    console.log('helooou from companiesPageadmin', rows)
 
     const getData = () => {
         fetch('http://localhost:3001/api/company', {
@@ -17,7 +14,6 @@ function CompaniesPageAdmin() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
                 setRows(data.map((el, i) => {
                     return {
                         id: i,
@@ -25,12 +21,12 @@ function CompaniesPageAdmin() {
                         name: el.name,
                         employersNum: el.employersNum,
                         email: el.email,
-                        picture:el.picture
+                        picture: el.picture
                     }
                 }))
             });
     }
-    
+
     useEffect(() => {
         getData()
     }, [])
@@ -40,10 +36,8 @@ function CompaniesPageAdmin() {
             <Box sx={{ display: 'flex', flexDirection: 'column', py: 8, mx: 4, backgroundColor: '#e9e8eb' }}>
                 <Typography variant='h4' sx={{ mb: 4 }}>Companies</Typography>
                 {rows.length ? <UserTable rows={rows} getData={getData} type='companies' /> : null}
-
             </Box>
         </Box>
-
     )
 }
 

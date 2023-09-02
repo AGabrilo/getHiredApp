@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, CardContent, Card, Typography, Stack, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Button, CardContent, Card, Typography, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteDialog from '../deleteDialog/DeleteDialog';
 import CompanyDialogForm from '../companyDialogForm/CompanyDialogForm';
@@ -7,26 +7,26 @@ import CompanyDialogForm from '../companyDialogForm/CompanyDialogForm';
 function CompanyCard(props) {
     const { company, top, handleDeleteButton, handleUpdate } = props
     const isCompany = true
-    const shortedDescription = company.description && company.description.length > 200 ? company.description.length > 300  ? company.description.slice(0, 300) + '...': company.description.slice(0, 200) + '...' : company.description;
+    const shortedDescription = company.description && company.description.length > 200 ? company.description.length > 300 ? company.description.slice(0, 300) + '...' : company.description.slice(0, 200) + '...' : company.description;
     const navigate = useNavigate()
     const [open, setOpen] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
+    const screenSize = window.innerWidth <= 900 ? 'small' : 'large'
 
-console.log(company)
     return (
         <Card
             orientation="horizontal"
             sx={{
                 width: '100%',
                 flexWrap: 'wrap',
-                height:400
+                height: screenSize === 'small' ? 580 : 400
             }}
         >
-            <CardContent sx={{   height:400}}>
+            <CardContent sx={{ height: screenSize === 'small' ? 580 : 400 }}>
                 <Stack direction={{ md: top ? 'column' : 'row', xs: 'column' }}
                     spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '100%' }}>
                     <img
-                        src={company.picture ? `http://localhost:3001${company.picture}`:require("./company.jpeg")}
+                        src={company.picture ? `http://localhost:3001${company.picture}` : require("./company.jpeg")}
                         alt=""
                         width={170}
                         height={170}
@@ -42,7 +42,7 @@ console.log(company)
 
                 </Stack>
                 <Typography variant='h6' sx={{ fontWeight: 700, color: '#f2572c' }}>Description</Typography>
-                <Typography variant='body1' sx={{ height:105}}>
+                <Typography variant='body1' sx={{ height: screenSize === 'small' ? 220 : 105 }}>
                     {shortedDescription}
                 </Typography>
 

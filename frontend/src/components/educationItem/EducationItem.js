@@ -7,8 +7,7 @@ function EducationItem(props) {
     const { education, getData, userData, i, details } = props;
     const newArray = userData.education
 
-    const handleUpdate = (id, updatedObject) => {
-
+    const handleUpdate = (id) => {
         fetch(`http://localhost:3001/api/user/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ education: newArray }),
@@ -47,7 +46,6 @@ function EducationItem(props) {
             </Box>
             <Divider />
         </>
-
     )
 }
 
