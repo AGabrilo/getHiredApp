@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Button, CardContent, Card, Typography, Stack, Grid, Paper, IconButton, Divider, Chip } from '@mui/material';
+import { Box, Button, CardContent, Card, Typography, Stack, Grid, Paper, IconButton, Divider, Chip, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { DeleteJobButton, TopCompanies } from '../../components';
+import { ApplyForm, DeleteJobButton, TopCompanies } from '../../components';
 import { useSelector } from 'react-redux';
 import { selectCompaniesConf } from '../../redux/companiesSlice';
 import dateFormat from 'dateformat';
@@ -15,9 +15,10 @@ function JobDetailsPage() {
     const companies = useSelector(selectCompaniesConf)
     const [company, setCompany] = useState({})
     const [favourite, setFavourite] = useState([])
+    const [open, setOpen] = useState(false);
     const id = localStorage.getItem('id')
 
-    const getFavourites = () => {
+    const getFavourites = useCallback(() => {
         fetch(`http://localhost:3001/api/favourite/${id}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -28,7 +29,7 @@ function JobDetailsPage() {
             .then((data) => {
                 setFavourite(data)
             });
-    }
+    },[id])
 
     const checkIfFavourite = (jobId) => {
         let check = favourite.filter((el) => el.jobId === jobId)
@@ -76,7 +77,7 @@ function JobDetailsPage() {
 
     useEffect(() => {
         getFavourites()
-    }, [])
+    }, [getFavourites])
 
     const getData = useCallback(() => {
         fetch(`http://localhost:3001/api/job/${jobId}`, {
@@ -88,7 +89,7 @@ function JobDetailsPage() {
             .then((response) => response.json())
             .then((data) => {
                 setJob(data)
-                setCompany(companies.filter((company)=>company._id === data.companyId)[0])
+                setCompany(companies.filter((company) => company._id === data.companyId)[0])
             })
     }, [jobId, companies])
 
@@ -97,15 +98,24 @@ function JobDetailsPage() {
 
     }, [jobId, getData])
 
+    const handleApplyButton = (formData) => {
+        fetch(`http://localhost:3001/api/application`, {
+            method: 'POST',
+            body: formData
+        })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+
     return (
-        <Box sx={{ backgroundColor: '#e9e8eb' }}>
+        <Box sx={{ backgroundColor: '#e9e8eb', minHeight: '100vh' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', py: 8, mx: 4, alignItems: 'center', backgroundColor: '#e9e8eb' }}>
 
                 <Typography variant='h3' >Job Details</Typography>
-
-                <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'wrap' }}>
-                    <Grid container spacing={2} item xs={12} md={9} lg={9} sx={{ height: 'fit-content', mb: 3 }}>
-                        {job && company ?
+                {job && company ?
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'wrap' }}>
+                        <Grid container spacing={2} item xs={12} md={9} lg={9} sx={{ height: 'fit-content', mb: 3 }}>
                             <Card
                                 orientation="horizontal"
                                 sx={{
@@ -122,7 +132,6 @@ function JobDetailsPage() {
                                                 alt=""
                                                 width={200}
                                                 height={200}
-                                                onClick={()=>console.log(company.picture)}
                                             />
                                             <Box>
                                                 <Typography variant='h4' sx={{ fontWeight: 700 }}>
@@ -132,16 +141,17 @@ function JobDetailsPage() {
                                                     {company.name}
                                                 </Typography>
                                                 <Typography>
-                                                    {job.location.city}, {job.location.country}
+                                                    {job.location && job.location.city}  {job.location&& job.location.country}
                                                 </Typography>
                                             </Box>
                                         </Stack>
                                         {!isCompany ?
                                             <Box>
-                                                <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize: 20 }}>Apply</Button>
-                                                <IconButton variant="outlined" color={checkIfFavourite(job._id) ? "error" : "neutral"} sx={{ mr: 'auto' }} onClick={() => handleFavouriteButton(job._id)} sx={{ flexGrow: 0 }}>
+                                                <Button variant='contained' sx={{ width: '120px', height: '60px', backgroundColor: '#f2572c', fontSize: 20 }} onClick={() => setOpen(true)}>Apply</Button>
+                                                <IconButton variant="outlined" color={checkIfFavourite(job._id) ? "error" : "neutral"} sx={{ mr: 'auto', flexGrow: 0 }} onClick={() => handleFavouriteButton(job._id)}>
                                                     <Favorite />
                                                 </IconButton>
+                                                <ApplyForm open={open} setOpen={setOpen} id={job._id} handleApplyButton={handleApplyButton} />
                                             </Box>
                                             : null
                                         }
@@ -205,18 +215,18 @@ function JobDetailsPage() {
                                         : null}
                                 </CardContent>
                             </Card>
-                            : <Typography variant='h5' >No Data</Typography>}
-                    </Grid>
+                        </Grid>
 
-                    <Grid container item xs={12} md={2} lg={2} sx={{ height: 'fit-content' }}>
-                        <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
-                            <Paper sx={{ p: 3, minWidth: 150 }}>
-                                <Typography variant='h5' >Other companies</Typography>
-                            </Paper>
-                            <TopCompanies />
-                        </Stack>
-                    </Grid>
-                </Box>
+                        <Grid container item xs={12} md={2} lg={2} sx={{ height: 'fit-content' }}>
+                            <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
+                                <Paper sx={{ p: 3, minWidth: 150 }}>
+                                    <Typography variant='h5' >Other companies</Typography>
+                                </Paper>
+                                <TopCompanies />
+                            </Stack>
+                        </Grid>
+                    </Box>
+                    : <Box sx={{ display: 'flex', justifyContent: 'center' }}><CircularProgress /></Box>}
             </Box>
         </Box >
     )

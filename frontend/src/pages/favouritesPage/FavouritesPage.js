@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FavouriteCardView } from '../../components';
 function FavouritesPage() {
     const [favourite, setFavourite] = useState([])
     const id = localStorage.getItem('id')
 
-    const getData = () => {
+    const getData = useCallback(() => {
         fetch(`http://localhost:3001/api/favourite/${id}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -16,11 +16,11 @@ function FavouritesPage() {
             .then((data) => {
                 setFavourite(data)
             });
-    }
+    },[id])
 
     useEffect(() => {
         getData()
-    }, [favourite])
+    }, [getData])
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb', minHeight: '100vh' }}>

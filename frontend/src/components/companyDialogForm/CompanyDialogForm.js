@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { Box, Button, TextField, Card, Typography, Stack, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@mui/material';
+import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTitle } from '@mui/material';
 
 function CompanyDialogForm(props) {
   const { company, open, setOpen, handleUpdate } = props;

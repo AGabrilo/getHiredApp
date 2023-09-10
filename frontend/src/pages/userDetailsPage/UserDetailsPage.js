@@ -1,7 +1,7 @@
-import { Avatar, Box, Grid, Typography, Stack, Paper, Chip, Button, IconButton } from '@mui/material';
+import { Avatar, Box, Grid, Typography, Stack, Paper, Chip, Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { DeleteDialog, EducationForm, EducationItem, ExperienceForm, ExperienceItem, UserForm } from '../../components';
+import { EducationItem, ExperienceItem } from '../../components';
 import { saveAs } from 'file-saver'
 
 function UserDetailsPage(props) {
@@ -18,14 +18,12 @@ function UserDetailsPage(props) {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('dataa', data)
                 setUserData(data)
 
             })
             .catch((e) => console.log('error', e));
     }
     const handleDownload = (user) => {
-        console.log(user, 'resume')
         fetch(`http://localhost:3001/api/user/download/${user._id}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -36,7 +34,6 @@ function UserDetailsPage(props) {
             .then((data) => {
                 const blob = new Blob([data], { type: 'application/pdf' })
                 saveAs(blob, `Resume_${user.firstName}_${user.lastName}.pdf`)
-                console.log('done', data)
                 getData()
 
             })
@@ -48,8 +45,6 @@ function UserDetailsPage(props) {
     useEffect(() => {
         getData()
     }, [])
-
-    console.log('userData', userData)
 
     return (
         <Box sx={{ backgroundColor: '#e9e8eb' }}>
@@ -64,7 +59,7 @@ function UserDetailsPage(props) {
                                 <Paper sx={{ p: 2.4, backgroundColor: 'white', width: '100%', borderRadius: 2.5 }}>
                                     <Stack direction={'column'} spacing={3}>
                                         <Typography variant='h5'>Email: {userData.email}</Typography>
-                                        <Typography variant='h5'>Location: {userData.location && userData.location.city}, { userData.location &&userData.location.country}</Typography>
+                                        <Typography variant='h5'>Location: {userData.location && userData.location.city}, {userData.location && userData.location.country}</Typography>
                                     </Stack>
                                 </Paper>
                             </Stack>
@@ -93,7 +88,7 @@ function UserDetailsPage(props) {
 
                                     </Box>
                                     <Grid container spacing={2}>
-                                        { userData.skills && userData.skills.length ?
+                                        {userData.skills && userData.skills.length ?
                                             userData.skills.map((skill) => <Grid item>
                                                 <Chip label={skill} variant="outlined" size='medium' sx={{ backgroundColor: '#ccccff' }} />
                                             </Grid>)
@@ -106,7 +101,7 @@ function UserDetailsPage(props) {
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                                         <Typography variant='h4' sx={{ color: '#f2572c' }}>My education</Typography>
                                     </Box>
-                                    {userData.education &&userData.education.length ?
+                                    {userData.education && userData.education.length ?
                                         userData.education.map((educ, i) => <EducationItem education={educ} userData={userData} getData={getData} i={i} details />)
                                         : null}
                                 </Paper>
@@ -115,7 +110,7 @@ function UserDetailsPage(props) {
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                                         <Typography variant='h4' sx={{ color: '#f2572c' }}>My work experience</Typography>
                                     </Box>
-                                    { userData.workExperience &&userData.workExperience.length ?
+                                    {userData.workExperience && userData.workExperience.length ?
                                         userData.workExperience.map((exp, i) => <ExperienceItem experience={exp} userData={userData} getData={getData} i={i} details />)
                                         : null}
 

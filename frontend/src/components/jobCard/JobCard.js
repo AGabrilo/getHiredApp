@@ -11,7 +11,6 @@ function JobCard(props) {
     const shortedDescription = job.description.length > 200 ? fav && job.description.length > 300 ? job.description.slice(0, 300) + '...' : job.description.slice(0, 200) + '...' : job.description;
     const navigate = useNavigate();
     const [favourite, setFavourite] = useState([])
-    const [company, setCompany] = useState({})
     const [open, setOpen] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const isCompany = localStorage.getItem('role') === 'company' ? true : false;
@@ -29,18 +28,7 @@ function JobCard(props) {
             .then((data) => {
                 setFavourite(data)
             });
-
-        fetch(`http://localhost:3001/api/company/${job.companyId}`, {
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setCompany(data)
-            });
-    }, [id, job.companyId])
+    }, [id])
 
     const checkIfFavourite = (jobId) => {
         let check = favourite && favourite.filter((el) => el.jobId === jobId && el.userId === id)
@@ -105,7 +93,7 @@ function JobCard(props) {
                     p: 2
                 }}
             >
-                <Avatar src={`http://localhost:3001${company.picture}`} sx={{ width: 56, height: 56 }} />
+                <Avatar src={`http://localhost:3001${job.picture}`} sx={{ width: 56, height: 56 }} />
                 <Typography variant="h6">
                     {dateFormat(job.datePosted, "mmmm dS, yyyy")}
                 </Typography>
@@ -115,7 +103,7 @@ function JobCard(props) {
                     {job.jobTitle}
                 </Typography>
                 <Typography variant="body1">
-                    {company.name ? company.name : ''}
+                    {job.companyName}
                 </Typography>
                 <Grid container spacing={2}>
                     {shortedSkills.map((skill, i) => {

@@ -56,6 +56,7 @@ module.exports.deleteJob = async (jobId) => {
 }
 
 module.exports.updateJob = async (jobId, jobObject) => {
+    console.log('Update job:',jobObject)
     const filter = {
         _id: jobId
     }

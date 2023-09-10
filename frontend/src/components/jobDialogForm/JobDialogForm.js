@@ -4,30 +4,28 @@ import { Box, Button, TextField, Dialog, DialogContent, DialogActions, DialogTit
 import { useSelector } from 'react-redux';
 import { selectJobTypesConf, selectSkillsConf, selectWorkLocationsConf } from '../../redux/configurationSlice';
 import { DatePicker } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
 
 function JobDialogForm(props) {
     const { job, open, setOpen, handleSubmit } = props;
     const jobTypes = useSelector(selectJobTypesConf)
     const skills = useSelector(selectSkillsConf)
     const workLocations = useSelector(selectWorkLocationsConf)
-    const initialValues = job ? { _id: job._id, jobTitle: job.jobTitle, description: job.description, hiringNum: job.hiringNum, location: { city: job.location.city, country: job.location.country }, jobType: job.jobType, skills: job.skills, workLocation: job.workLocation, deadline: job.deadline }
-        : { jobTitle: '', description: '', hiringNum: '', location: { city: '', country: '' }, jobType: '', skills: [], workLocation: '', deadline: dayjs('2022-04-17') }
+    const initialValues = job ? { _id: job._id, jobTitle: job.jobTitle, description: job.description, hiringNum: job.hiringNum, location: { city: job.location && job.location.city, country: job.location && job.location.country }, jobType: job.jobType, skills: job.skills, workLocation: job.workLocation, deadline: job.deadline }
+        : { jobTitle: '', description: '', hiringNum: '', location: { city: '', country: '' }, jobType: '', skills: [], workLocation: '', deadline: '' }
 
     const formik = useFormik({
         initialValues: initialValues,
         onSubmit: (values) => {
             console.log('Values on submit:', values)
-            // values.deadline = convertToISOString(values.deadline)
+            values.deadline = convertToISOString(values.deadline)
             handleSubmit(values)
         }
     })
 
     const convertToISOString = (stringDate) => {
         const test = stringDate.format('DD-MM-YYYY')
-        const [month, day, year] = test.split('-');
-        const date = new Date(Date.UTC(year, month - 1, day));
-        console.log(date.toISOString())
+        const [day, month, year] = test.split('-');
+        const date = new Date(year, month - 1, day);
         return date.toISOString();
     }
 
@@ -154,7 +152,12 @@ function JobDialogForm(props) {
                         )}
                         sx={{ mb: 2 }}
                     />
-                    <DatePicker label="Expiring date" sx={{ width: '100%' }} />
+                    <DatePicker label="Expiring date"
+                        sx={{ width: '100%' }}
+                        onChange={(value) => formik.setFieldValue("deadline", value)}
+                        error={Boolean(formik.errors['deadline'])}
+                        helperText={formik.errors['deadline']}
+                        inputFormat="DD-MM-YYYY" />
 
                 </Box>
             </DialogContent>

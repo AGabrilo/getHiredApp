@@ -31,7 +31,7 @@ function ExperienceForm(props) {
 
     const convertToISOString = (stringDate) => {
         const test = stringDate.format('DD-MM-YYYY')
-        const [month, day, year] = test.split('-');
+        const [day, month, year] = test.split('-');
         const date = new Date(Date.UTC(year, month - 1, day));
         return date.toISOString();
     }

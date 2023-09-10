@@ -27,7 +27,7 @@ function EducationForm(props) {
 
     const convertToISOString = (stringDate) => {
         stringDate = stringDate.format('DD-MM-YYYY')
-        const [month, day, year] = stringDate.split('-');
+        const [day, month, year] = stringDate.split('-');
         const date = new Date(Date.UTC(year, month - 1, day));
         return date.toISOString();
     }

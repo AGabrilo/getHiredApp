@@ -24,7 +24,6 @@ function ApplicationTable(props) {
   }))
 
   const handleDeleteButton = (id) => {
-    console.log('iddd', id)
     fetch(`http://localhost:3001/api/application/${id}`, {
       method: 'DELETE',
       headers: {

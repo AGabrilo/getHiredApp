@@ -6,9 +6,9 @@ function UpdateJobButton(props) {
     const { job, getData } = props;
     const [open, setOpen] = useState(false)
 
-    const handleUpdate = (jobId, updatedJobObject) => {
-
-        fetch(`http://localhost:3001/api/job/${jobId}`, {
+    const handleUpdate = (updatedJobObject) => {
+console.log('handle updateeee', updatedJobObject)
+        fetch(`http://localhost:3001/api/job/${updatedJobObject._id}`, {
             method: 'PUT',
             body: JSON.stringify(updatedJobObject),
             headers: {
@@ -27,7 +27,7 @@ function UpdateJobButton(props) {
             <Button variant="contained" sx={{ backgroundColor: '#f2572c', mr: 2 }} onClick={() => setOpen(true)}>
                 Update
             </Button>
-            <JobDialogForm open={open} setOpen={setOpen} job={job} handleUpdate={handleUpdate} />
+            <JobDialogForm open={open} setOpen={setOpen} job={job} handleSubmit={handleUpdate} />
         </>
 
     )

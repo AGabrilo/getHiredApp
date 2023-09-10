@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LandingPage, CompaniesPage, FavouritesPage, JobsPage, MyApplicationsPage, LoginPage, ProfilePage, CompanyDetailsPage, JobDetailsPage, UsersPage, SignUpPage, MyJobsPage, ProfilePageCompany, UserDetailsPage, CompaniesPageAdmin } from "./pages";
+import { LandingPage, CompaniesPage, FavouritesPage, JobsPage, MyApplicationsPage, LoginPage, ProfilePage, CompanyDetailsPage, JobDetailsPage, UsersPage, SignUpPage, MyJobsPage, UserDetailsPage, CompaniesPageAdmin } from "./pages";
 import { NavBar } from "./components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./utils/protectedRoute";
@@ -8,7 +8,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
 function App() {
-  const role = localStorage.getItem('role')
 
   return (
     <div>

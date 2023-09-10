@@ -3,12 +3,13 @@ import { Box, Grid, Stack, Typography } from '@mui/material';
 import { JobFilters, JobCard, SearchComponent } from '../../components';
 import { useSelector } from 'react-redux';
 import { selectJobsConf } from '../../redux/jobsSlice';
+import { selectCompaniesConf } from '../../redux/companiesSlice';
 import { selectJobTypesConf, selectSkillsConf, selectWorkLocationsConf } from '../../redux/configurationSlice';
 
 function JobsPage() {
     const [name, setName] = useState();
     const [location, setLocation] = useState();
-    const [filteredData, setFilteredData] = useState(useSelector(selectJobsConf))
+    const [filteredData, setFilteredData] = useState([])
     const [filteredSkills, setFilteredSkills] = useState([]);
     const [filteredWorkLocation, setFilteredWorkLocation] = useState([]);
     const [filteredJobType, setFilteredJobType] = useState([]);
@@ -16,6 +17,7 @@ function JobsPage() {
     const skills = useSelector(selectSkillsConf)
     const workLocations = useSelector(selectWorkLocationsConf)
     const allJobs = useSelector(selectJobsConf)
+    const companies = useSelector(selectCompaniesConf)
     const noDataWidth = window.innerWidth - 300
     const queryParams = useMemo(() => new URLSearchParams(), []);
 
@@ -28,9 +30,23 @@ function JobsPage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                setFilteredData(data)
+
+                if (companies.length) setFilteredData(data.map((el) => {
+                    let company = companies.find((elem) => elem._id === el.companyId)
+                    return {
+                        _id: el._id,
+                        datePosted: el.datePosted,
+                        picture: company.picture,
+                        companyName: company.name,
+                        jobTitle: el.jobTitle,
+                        skills: el.skills,
+                        description: el.description,
+                        companyId: el.companyId
+                    }
+                }))
+
             });
-    }, [queryParams])
+    }, [queryParams, companies])
 
     const getSearchedData = useCallback(() => {
         if (!name && !location) {
@@ -39,7 +55,7 @@ function JobsPage() {
             setFilteredData(allJobs.filter((d) => d.jobTitle.toLowerCase().includes(name)));
         }
         else if (!name && location) {
-            setFilteredData(allJobs.filter((d) => d.location.city.toLowerCase().includes(location) || d.location.country.toLowerCase().includes(location)));
+            setFilteredData(allJobs.filter((d) => d.location.city.toLowerCase().includes(location.toLowerCase()) || d.location.country.toLowerCase().includes(location.toLowerCase())));
         }
         else {
             setFilteredData(allJobs.filter((d) => (d.location.city.toLowerCase().includes(location) || d.location.country.toLowerCase().includes(location)) && d.jobTitle.toLowerCase().includes(name)));
@@ -100,7 +116,7 @@ function JobsPage() {
                 <SearchComponent setLocation={setLocation} setName={setName} component='Job' />
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', pt: 4, flexWrap: 'no-wrap' }}>
                     <Grid container item spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%' }}>
-                        {filteredData.length ?
+                        {filteredData.length?
                             filteredData.map((job, i) => {
                                 return <Grid container item sm={12} md={6} lg={6} xl={4} key={i}>
                                     <JobCard job={job} handleApplyButton={handleApplyButton} />

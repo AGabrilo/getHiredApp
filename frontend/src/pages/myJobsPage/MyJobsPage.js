@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import {  JobCard, SearchComponent, JobDialogForm } from '../../components';
+import { JobCard, SearchComponent, JobDialogForm } from '../../components';
 import { useSelector } from 'react-redux';
 import { selectJobsConf } from '../../redux/jobsSlice';
+import { selectCompaniesConf } from '../../redux/companiesSlice';
 
 function MyJobsPage() {
     const [name, setName] = useState();
@@ -11,20 +12,21 @@ function MyJobsPage() {
     const allJobs = useSelector(selectJobsConf).filter((el) => el.companyId === id)
     const [filteredData, setFilteredData] = useState([])
     const [open, setOpen] = useState(false);
+    const companies = useSelector(selectCompaniesConf)
     const noDataWidth = window.innerWidth - 300
 
     const handleAddJob = (jobObject) => {
         fetch(`http://localhost:3001/api/job`, {
             method: 'POST',
-            body: JSON.stringify({...jobObject, companyId: id}),
+            body: JSON.stringify({ ...jobObject, companyId: id }),
             headers: {
-              'Content-type': 'application/json; charset=UTF-8',
-              'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
-          })
+        })
             .then(() => getData())
             .catch((err) => {
-              console.log(err.message);
+                console.log(err.message);
             });
     }
 
@@ -35,9 +37,9 @@ function MyJobsPage() {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
-              },
+            },
         })
-            .then(() =>  getData() )
+            .then(() => getData())
             .catch((err) => {
                 console.log(err.message);
             });
@@ -50,9 +52,9 @@ function MyJobsPage() {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
-              },
+            },
         })
-            .then(() =>  getData() )
+            .then(() => getData())
             .catch((err) => {
                 console.log(err.message);
             });
@@ -68,9 +70,23 @@ function MyJobsPage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                setFilteredData(data.filter((el) => el.companyId === id))
+
+                if (companies.length) setFilteredData(data.filter((el) => el.companyId === id).map((el) => {
+                    let company = companies.find((elem) => elem._id === el.companyId)
+                    return {
+                        _id: el._id,
+                        datePosted: el.datePosted,
+                        picture: company.picture,
+                        companyName: company.name,
+                        jobTitle: el.jobTitle,
+                        skills: el.skills,
+                        description: el.description,
+                        companyId: el.companyId
+                    }
+                }))
+
             });
-    }, [id])
+    }, [id, companies])
 
     useEffect(() => {
         getData()
@@ -103,26 +119,38 @@ function MyJobsPage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                setFilteredData(data)
+                setFilteredData(data.map((el) => {
+                    let company = companies.find((elem) => elem._id === el.companyId)
+                    return {
+                        _id: el._id,
+                        datePosted: el.datePosted,
+                        picture: company.picture,
+                        companyName: company.name,
+                        jobTitle: el.jobTitle,
+                        skills: el.skills,
+                        description: el.description,
+                        companyId: el.companyId
+                    }
+                }))
             });
     }
 
     return (
-        <Box sx={{ backgroundColor: '#e9e8eb', minHeight: '100vh', width:'100%' }}>
+        <Box sx={{ backgroundColor: '#e9e8eb', minHeight: '100vh', width: '100%' }}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column', py: 8, mx: 4, backgroundColor: '#e9e8eb' }}>
                 <Stack direction={{ md: 'row', xs: 'column' }}
-                    spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '100%', mb: 3, justifyContent:'center' }}>
+                    spacing={{ xs: 1, sm: 2, md: 4 }} sx={{ width: '100%', mb: 3, justifyContent: 'center' }}>
                     <SearchComponent setLocation={setLocation} setName={setName} component='Job' />
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <Button variant='contained' sx={{ mr: 2, backgroundColor: '#f2572c', color: '#fafafa', height: 55 }} onClick={() => setOpen(true)}>Add new job</Button>
-                        <Button variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa', height: 55 }} onClick={()=>getExpiredData(id)}>Expired jobs</Button>
+                        <Button variant='contained' sx={{ backgroundColor: '#f2572c', color: '#fafafa', height: 55 }} onClick={() => getExpiredData(id)}>Expired jobs</Button>
                     </Box>
                 </Stack>
-                <Grid item container spacing={2} xs={12} md={9} lg={9} sx={{ height: 'fit-content', width: '100%', justifyContent:'flex-start' }}>
+                <Grid item container spacing={2} xs={12} md={12} lg={12} sx={{ height: 'fit-content', width: '100%', justifyContent: 'flex-start' }}>
                     {filteredData.length ?
                         filteredData.map((job, i) => {
-                            return <Grid container item sm={12} md={6} lg={6} xl={4} key={i}>
-                                <JobCard job={job} handleApplyButton handleModifyButton={handleModifyButton} handleDeleteButton={handleDeleteButton}/>
+                            return <Grid container item sm={12} md={6} lg={4} xl={4} key={i}>
+                                <JobCard job={job} handleApplyButton handleModifyButton={handleModifyButton} handleDeleteButton={handleDeleteButton} />
                             </Grid>
                         })
                         : <Grid item sm={12} md={12} lg={12} xl={12} key={'No data'} sx={{ width: noDataWidth, }}>

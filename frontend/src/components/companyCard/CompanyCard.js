@@ -6,7 +6,7 @@ import CompanyDialogForm from '../companyDialogForm/CompanyDialogForm';
 
 function CompanyCard(props) {
     const { company, top, handleDeleteButton, handleUpdate } = props
-    const isCompany = true
+    const role = localStorage.getItem('role')
     const shortedDescription = company.description && company.description.length > 200 ? company.description.length > 300 ? company.description.slice(0, 300) + '...' : company.description.slice(0, 200) + '...' : company.description;
     const navigate = useNavigate()
     const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ function CompanyCard(props) {
                 <Button variant="contained" sx={{ mt: 2, backgroundColor: '#f2572c', mr: 2 }} onClick={() => { navigate(`/companies/${company._id}`) }}>
                     View details
                 </Button>
-                {isCompany && !top ?
+                {role === 'company' && !top ?
                     <>
                         <Button variant="contained" sx={{ mt: 2, backgroundColor: '#f2572c', mr: 2 }} onClick={() => setOpen(true)}>
                             Delete

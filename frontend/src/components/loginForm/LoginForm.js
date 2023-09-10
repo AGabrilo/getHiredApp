@@ -15,7 +15,6 @@ function LoginForm() {
     })
 
     const handleLogin = (email, password, type) => {
-        console.log(email, password, type)
         fetch("http://localhost:3001/api/auth/login", {
             method: "POST",
             body: JSON.stringify({ email, password, type }),

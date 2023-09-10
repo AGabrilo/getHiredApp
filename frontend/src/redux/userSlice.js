@@ -11,7 +11,6 @@ export const fetchUsers = createAsyncThunk('user/fetchUser', async () => {
     const response = await fetch(`http://localhost:3001/api/user`, {
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
     })
         .then((response) => response.json())
@@ -34,7 +33,6 @@ export const usersSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(fetchUsers.rejected, (state) => {
-                console.log('Failed to load User!')
                 state.status = 'failed';
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {

@@ -2,6 +2,8 @@ import React from 'react';
 import { useFormik } from 'formik';
 import { useNavigate } from "react-router-dom";
 import { Box, Button, CardHeader, TextField, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { store } from '../../redux/store';
+import { fetchUsers } from '../../redux/userSlice';
 
 function RegisterForm(props) {
     const { type } = props
@@ -24,6 +26,7 @@ function RegisterForm(props) {
             .then((resp) => resp.json())
             .then((data) => {
                 console.log("User Registered!", data);
+                store.dispatch(fetchUsers())
                 navigate("/login")
             })
             .catch((err) => console.log(err));

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from "react-router-dom";
 import { Typography, AppBar, Box, Toolbar, IconButton, Menu, MenuItem, Container, Button, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -50,7 +50,7 @@ function NavBar() {
 
     }
 
-    const getNotificationData = () => {
+    const getNotificationData = useCallback(() => {
         fetch(`http://localhost:3001/api/user/notifications/${id}`, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -61,7 +61,7 @@ function NavBar() {
             .then((data) => {
                 setNotifications(data)
             });
-    }
+    },[id])
 
     const handleDeleteNotification = (id) => {
         fetch(`http://localhost:3001/api/user/notification/${id}`, {
@@ -82,8 +82,8 @@ function NavBar() {
     }
 
     useEffect(() => {
-        getNotificationData()
-    }, [])
+        if(role === 'user') getNotificationData()
+    }, [role, getNotificationData])
 
     return (
         <AppBar position="sticky" sx={{ backgroundColor: '#0d1a30', boxShadow: 'none', width: '100%' }}>
